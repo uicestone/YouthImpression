@@ -21,14 +21,13 @@
 
 <script>
 var track = $("#track a");
-$(".year").on("mouseenter",function(){
-    var left = $(this).attr("data-track-left");
-    var year = $(this).attr("id").split("-")[1];
+$(".year a").on("mouseenter",function(){
+    var year = $(this).parent();
+    var left = year.attr("data-track-left");
+    var year = year.attr("id").split("-")[1];
     track.find("img").attr("src","<?= get_template_directory_uri(); ?>/images/hubo-" + year + ".png");
-    track.animate({
-        left:left
-    },500,function(){
-        console.log("done");
+    track.css({
+        left:left + "px"
     });
 
 });
