@@ -4,17 +4,17 @@
 <div id="content-all2">    
 	<div id="video-banner">
 		<ul class="slides">
-        	<li><a href="#"><img src="http://s.cn.bing.net/az/hprichbg/rb/DyedSilkPieceHanging_ZH-CN8207662295_1366x768.jpg" /></a></li>
-        	<li><a href="#"><img src="http://s.cn.bing.net/az/hprichbg/rb/DyedSilkPieceHanging_ZH-CN8207662295_1366x768.jpg" /></a></li>            	
-            <li><a href="#"><img src="http://s.cn.bing.net/az/hprichbg/rb/DyedSilkPieceHanging_ZH-CN8207662295_1366x768.jpg" /></a></li>
+        	<li data-desc="A"><a href="#"><img src="http://stimgcn1.s-msn.com/msnportal/dict/bingcenter/desktop/bg_desktop1.jpg" /></a></li>
+        	<li data-desc="B"><a href="#"><img src="http://s.cn.bing.net/az/hprichbg/rb/DyedSilkPieceHanging_ZH-CN8207662295_1366x768.jpg" /></a></li>            	
+            <li data-desc="C"><a href="#"><img src="http://ppcdn.500px.org/52454318/5a85c84af40c52aab42a6c23104954255b4c6634/2048.jpg" /></a></li>
 		</ul>
 
 		<div class="prev">
 			<div class="arr"></div>	
-			prev
+			<span class="txt">A</span>
 		</div>
 		<div class="next">
-			next
+			<span class="txt">C</span>
 			<div class="arr"></div>	
 		</div>
 
@@ -33,22 +33,7 @@
 
 <script src="<?= get_template_directory_uri(); ?>/js/slide.js"></script>
 <script>
-var slides = $(".slides li");
-var prev = $("#video-banner").find(".prev");
-var next = $("#video-banner").find(".next");
-Slide({
-	current:1,
-	autoplay:false,
-	circle:false,
-    prev:prev,
-    next:next,
-    slides:slides,
-    change:function(last,current,n){
-    	$(".slides").animate({
-    		left:-n*792 + 298
-    	});
-    }
-});
+
 
 $('#video-all-7').waterfall({
     imgClass: 'wf_img',    // 图片类名
@@ -75,6 +60,58 @@ $('#video-all-7').waterfall({
     }
 });
 
+
+
+// done ugly but working endless slide
+var slides = $(".slides li");
+var prev = $("#video-banner").find(".prev");
+var next = $("#video-banner").find(".next");
+Slide({
+    current:1,
+    autoplay:false,
+    endless:true,
+    prev:prev,
+    next:next,
+    slides:slides,
+    change:function(last,current,n,cur,direction){
+        var total = slides.length;
+        var prev_num = n - 1 < 0 ? total - 1 : (n - 1);
+        var next_num = n + 1 >= total ? 0 : (n + 1); 
+        prev.find(".txt").html(slides.eq(prev_num).attr("data-desc"));
+        next.find(".txt").html(slides.eq(next_num).attr("data-desc"));
+
+
+        if(direction === "prev"){
+            if(cur == 1 || cur == 2){
+                $(".slides").animate({
+                    left:-(n+2) * 792 + 298
+                },function(){
+                    console.log(n,cur);
+                });
+            }else{
+                $(".slides").animate({
+                    left:-1 * 792 + 298
+                },function(){
+                    $(".slides").css("left",-2870);
+                });
+            }
+        }else{
+            if(cur == 0 || cur == 1){
+                $(".slides").animate({
+                    left:-(n+2) * 792 + 298
+                },function(){
+                    console.log(n,cur);
+                });
+            }else{
+                $(".slides").animate({
+                    left:-5 * 792 + 298
+                },function(){
+                    $(".slides").css("left",-1286);
+                });
+            }
+        }
+    }
+});
 
 
 
