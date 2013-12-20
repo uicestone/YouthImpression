@@ -1,36 +1,48 @@
-(function(){
-	var slides = $("#Product-content1 li");
-	var triggersBar = $(".Pro-click");
-	var prev = triggersBar.find(".prev");
-	var next = triggersBar.find(".next");
-	var triggers = triggersBar.find("li");
-	var active = triggersBar.eq(0);
-	var current = triggers.index(current);
+var Slide = function(opt){
+	var slides = opt.slides;
+	var triggers = $(opt.triggers);
+	var prev = opt.prev;
+	var next = opt.next;
+	var afterChange = opt.afterChange || function(){};
+	var change = opt.change || function(){};
+	var current = opt.current || 0;
+	var circle = typeof opt.circle === "boolean" ? opt.circle : true;
+	var autoplay = typeof opt.autoplay === "boolean" ? opt.autoplay : true;
 
 	function to(n){
-		console.log("n",slides.eq(n),"c",slides.eq(current));
 		if(n==current){return;}
-		slides.eq(current).fadeOut();
-		slides.eq(n).fadeIn();
-		triggers.find("img").attr("src","images/pro-noClick.png");
-		triggers.eq(n).find("img").attr("src","images/pro-nowClick.png");
+		change(slides.eq(current),slides.eq(n),n);
+		afterChange(n);
 		current = n;
 	}
 
 	function toNext(){
 		var nex = current + 1; 
 		if(current >= slides.length - 1){
-			nex = 0;
+			if(circle){
+				nex = 0;
+			}else{
+				nex = nex - 1;
+			}
 		}
-		to(nex);
+
+		if(nex != current){
+			to(nex);
+		}
 	}
 
 	function toPrev(){
 		var nex = current - 1; 
 		if(current <= 0){
-			nex = slides.length - 1;
+			if(circle){
+				nex = slides.length - 1;
+			}else{
+				nex = nex + 1;
+			}
 		}
-		to(nex);
+		if(nex != current){
+			to(nex);
+		}
 	}
 
 	prev.on("click",toPrev);
@@ -40,5 +52,5 @@
 		e.preventDefault();
 		to(triggers.index(this));
 	});
-	setInterval(toNext,5000);
-})();
+	autoplay && setInterval(toNext,5000);
+};

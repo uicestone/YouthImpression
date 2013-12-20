@@ -394,10 +394,10 @@ img{border:0;}
 	width: 792px;
 	height: 400px;
 }
-#video-banner .prev,
-#video-banner .next{
+
+#video-banner .left-shadow,
+#video-banner .right-shadow{
 	position: absolute;	
-	right: 0;
 	height: 100%;
 	background-color: #000;
 	opacity: .8;
@@ -405,10 +405,51 @@ img{border:0;}
 	height: 400px;
 }
 
-#video-banner .prev{
+
+#video-banner .left-shadow{
 	left: 0;
 }
+#video-banner .right-shadow{
+	right: 0;
+}
+
+#video-banner .prev,
 #video-banner .next{
+	position: absolute;
+	top: 354px;
+	width:100px;
+	height:30px;
+	line-height: 30px;
+	color:#fff;
+	background-color: #555;
+	background-color: rgba(0,0,0,0.5);
+	cursor:pointer;
+}
+#video-banner .prev{
+	left: 315px;
+	padding-left:40px;
+}
+#video-banner .next{
+	right: 315px;
+	padding-right:40px;
+	text-align: right
+}
+
+#video-banner .prev .arr,
+#video-banner .next .arr{
+	position: absolute;
+	width:30px;
+	height:30px;
+	top: 0;
+	background-image:url("../images/pink-arr.png");
+}
+
+#video-banner .prev .arr{
+	left: 0;
+	background-position: 0 -30px;
+}
+
+#video-banner .next .arr{
 	right: 0;
 }
 

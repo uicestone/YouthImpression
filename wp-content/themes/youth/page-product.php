@@ -25,9 +25,32 @@
         </div>
     </div>
     <div class="back-btn">
-        <a href="#"><img src="images/back.png" width="60" height="24" /></a>
+        <a href="#"><img src="<?= get_template_directory_uri(); ?>/images/back.png" width="60" height="24" /></a>
     </div>
 </div>
 
+
 <script src="<?= get_template_directory_uri(); ?>/js/slide.js"></script>
+<script>
+var slides = $("#Product-content1 li");
+var prev = $(".Pro-click").find(".prev");
+var next = $(".Pro-click").find(".next");
+var triggers = $(".Pro-click").find("li");
+Slide({
+    autoplay:true,
+    prev:prev,
+    next:next,
+    triggers:triggers,
+    slides:slides,
+    change:function(last,current){
+        last.fadeOut();
+        current.fadeIn();
+    },
+    afterChange:function(n){
+        triggers.find("img").attr("src","<?= get_template_directory_uri(); ?>/images/pro-noClick.png");
+        triggers.eq(n).find("img").attr("src","<?= get_template_directory_uri(); ?>/images/pro-nowClick.png");
+    }
+});
+</script>
+
 <?php get_footer(); ?>

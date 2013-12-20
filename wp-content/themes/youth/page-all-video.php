@@ -2,15 +2,22 @@
 <div id="content-all2">    
 	<div id="video-banner">
 		<ul class="slides">
-        	<li><a href="#"><img src="<?= get_template_directory_uri(); ?>/images/video-p1.jpg" /></a></li>
-        	<li><a href="#"><img src="<?= get_template_directory_uri(); ?>/images/video-p2.jpg" /></a></li>            	
-            <li><a href="#"><img src="<?= get_template_directory_uri(); ?>/images/video-p3.jpg" /></a></li>
+        	<li><a href="#"><img src="http://s.cn.bing.net/az/hprichbg/rb/DyedSilkPieceHanging_ZH-CN8207662295_1366x768.jpg" /></a></li>
+        	<li><a href="#"><img src="http://s.cn.bing.net/az/hprichbg/rb/DyedSilkPieceHanging_ZH-CN8207662295_1366x768.jpg" /></a></li>            	
+            <li><a href="#"><img src="http://s.cn.bing.net/az/hprichbg/rb/DyedSilkPieceHanging_ZH-CN8207662295_1366x768.jpg" /></a></li>
 		</ul>
 
 		<div class="prev">
-			
+			<div class="arr"></div>	
+			prev
 		</div>
-		<div class="next"></div>
+		<div class="next">
+			next
+			<div class="arr"></div>	
+		</div>
+
+		<div class="left-shadow"></div>
+		<div class="right-shadow"></div>
     </div> 
 	
 
@@ -28,8 +35,25 @@
     </div>
 </div>
 
+
+<script src="<?= get_template_directory_uri(); ?>/js/slide.js"></script>
 <script>
-$("#video-banner")
+var slides = $(".slides li");
+var prev = $("#video-banner").find(".prev");
+var next = $("#video-banner").find(".next");
+Slide({
+	current:1,
+	autoplay:false,
+	circle:false,
+    prev:prev,
+    next:next,
+    slides:slides,
+    change:function(last,current,n){
+    	$(".slides").animate({
+    		left:-n*792 + 298
+    	});
+    }
+});
 </script>
 
 <?php get_footer(); ?>
