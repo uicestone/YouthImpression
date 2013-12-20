@@ -454,17 +454,22 @@ img{border:0;}
 }
 
 #video-all-7{
-	width: 1207px;
+	width: 1240px;
 	position: relative;
 	margin: 0 auto;
 	margin-top: 35px;
 	clear: both;
-	height: 512px;
 }
-/*#video-all-7 img{
-	float: left;
-	padding-right: 12px;
-}*/
+
+
+#video-all-7 a{
+	background-color: #fff;
+	padding:10px 10px 10px;
+	display: block;
+}
+#video-all-7 img{
+	width:169px;
+}
 .post1{
 	top: 277px;
 	left: 0px;

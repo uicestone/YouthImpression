@@ -1,510 +1,545 @@
-/*
-Simple min-height-masonry layout plugin.
-Like masonry column shift, but works.
-*/
-;(function ($){
-	var $wnd = $(window),
-		$doc = $(window.document),
-		$body = $(window.document.body),
-		cssPrefix = detectCSSPrefix();
-
-	var Waterfall = function (el, opts){
-		this.$el = $(el);
-		this.el = el[0];
-		this._create(opts)
-	}
-
-	Waterfall.defaultClass = "waterfall";
-
-	$.extend(Waterfall.prototype, {
-		options: {
-			colMinWidth: 300, //width of column, used to calculate number of columns possible to display
-			defaultContainerWidth: window.clientWidth,
-			autoresize: true,
-			maxCols: 16, //used to restrict max number of columns
-			updateDelay: 25, //how often to reflow layout on window resize
-			useCalc: undefined, //set width through -prefix-calc value. Values: true, false, undefined. Autodetection.
-			useTranslate3d: undefined, //place items through translate3d instead of top/left. Values: true, false, undefined. Autodetection
-			animateShow: false, //whether to animate appending items (causes browser extra-reflows, slows down rendering)
-
-			//callbacks
-			reflow: null
-		},
-
-		_create: function (opts) {
-			var self = this,
-			o = self.options = $.extend({}, self.options, opts);
-
-			this.items = [];
-
-			//init some vars
-			self.lastHeights = [];
-			self.lastItems = [];
-			self.colPriority = []; //most left = most minimal column
-			self.baseOrder = [];
-
-			var cStyle = getComputedStyle(self.el);
-			self.el.style.minHeight = cStyle.height; //prevent scrollbar width changing
-			if (self.$el.css("position") === "static" ) self.el.style.position = "relative";
-
-			//detect placing mode needed
-			if (o.useCalc === undefined){
-				this.calcPrefix = (function(){
-					//modernizr-snippet
-					var dummy = document.createElement('div');
-					var props = ['calc', '-webkit-calc', '-moz-calc', '-o-calc'];
-					for (var i=0; i<props.length; ++i) {
-						var prop = props[i];
-						dummy.style.cssText = 'width:' + prop + '(1px);';
-						if (dummy.style.length)
-							return prop;
-					}
-				})();
-				o.useCalc = !!this.calcPrefix;
-			}
-			if (o.useTranslate3d === undefined){
-				o.useTranslate3d = !!detectCSSPrefix("transform")
-			}
-
-			//populate items
-			var items;
-			if (o.itemSelector){
-				items = self.$el.find(o.itemSelector);
-				items.detach();
-				self.$el.children().remove();
-				self.$el.append(items)
-			} else {
-				items = self.$el.children();
-			} 
-						
-			items.each(function(i, e){
-				//self.items[i].data("id", i);
-				self.items.push(e);
-				self._initItem(e);
-			})
-
-			self.lastItem = self.items[self.items.length-1]
-			self.firstItem = self.items[0]
-
-			self._update();
-
-			if (o.autoresize) {
-				$(window).resize(self.reflow.bind(self))
-			}
-		
-			this._observeMutations();
-		},
-
-		_observeMutations: function(){
-			//Make Node changing observer - the fastest way to add items
-			if (window.MutationObserver) {
-				//FF, chrome
-				this.observer = new MutationObserver(function(mutations){
-					var mNum = mutations.length;
-					for (var i = 0; i < mNum; i++){
-						if (mutations[i].removedNodes.length){
-							this._removedItems(Array.prototype.slice.apply(mutations[i].removedNodes))
-						}
-						if (mutations[i].addedNodes.length){
-							this._addedItems(Array.prototype.slice.apply(mutations[i].addedNodes))
-						}
-					}
-				}.bind(this));
-
-				this.observer.observe(this.el, { 
-					attributes: false, 
-					childList: true, 
-					characterData: false 
-				});
-			} else {
-				//opera, ie
-				this.$el.on("DOMNodeInserted", function(e){
-					var el = (e.originalEvent || e).target;
-
-					if (el.nodeType !== 1) return;
-
-					this._addedItems([el])
-				}.bind(this))
-			}
-		},
-
-		//==========================API
-		//Ensures column number correct, reallocates items
-		reflow: function () {
-			var self = this, o = self.options;
-
-			window.clearTimeout(self._updateInterval);
-			self._updateInterval = window.setTimeout(self._update.bind(self), o.updateDelay);
-
-			return self;
-		},
-
-		//========================= Techs
-		//called by mutation observer
-		_addedItems: function(items){
-			var o = this.options, l = items.length;
-			for (var i = 0; i < l; i++ ){
-				var el = items[i];
-				if (el.nodeType !== 1) continue;
-				this.items.push(el);
-				this._initItem(el); //TODO: optimize
-			}
-
-			for (var i = 0; i < l; i++){
-				this._placeItem(items[i])
-			}
-
-			this.lastItem = this.items[this.items.length - 1];
-
-			this._maximizeHeight();
-		},
-
-		//called by mutation observer
-		_removedItems: function(items){
-			var l = items.length,
-				childItems = this.el.childNodes,
-				cl = childItems.length;
+/*!
+ * jQuery Waterfall v1.2
+ * 
+ * Author		: LeoLai
+ * Blog			: http://leolai.cnblogs.com/
+ * Mail 		: leolai.mail@qq.com
+ * QQ 			: 657448678 
+ * Date 		: 2013-4-19 
+ * Last Update 	: 2013-5-23
+ *
+ **************************************************************
+ * 1. 根据页面大小自动排列
+ * 2. 自定义异步请求函数（返回JSON，json格式与html模板对应即可，默认格式请看demo json.js）
+ * 3. 自定义html模板
+ * 4. 图片自动按比例缩放
+ * 5. 是否显示分页(未完成)
+ * usage: url必填，其它不传将使用默认配置
+	$('#id').waterfall({
+		itemClass: 'wf_item',	// 砖块类名
+		imgClass: 'thumb_img',	// 图片类名
+		colWidth: 235,			// 列宽
+		marginLeft: 15,			// 每列的左间宽
+		marginTop: 15,			// 每列的上间宽
+		perNum: 'auto',			// 每次下拉时显示多少个(默认是列数)
+		isAnimation: true,		// 是否使用动画效果
+		ajaxTimes: 'infinite',	// 限制加载的次数(int) 字符串'infinite'表示无限加载 
+		url: null,				// 数据来源(ajax加载，返回json格式)，传入了ajaxFunc参数，此参数将无效
+		ajaxFunc: null,			// 自定义异步函数, 第一个参数为成功回调函数，第二个参数为失败回调函数
+								// 当执行成功回调函数时，传入返回的JSON数据作为参数
+		createHtml: null		// 自定义生成html字符串函数,参数为一个信息集合，返回一个html字符串
+	});
+ *
+ */
+ 
+;(function($, window, document){
+	$.fn.waterfall = function(options){
+		var // 配置信息
+			opts = $.extend({}, $.fn.waterfall.defaults, options), 
 			
-			//reinit items
-			this.items.length = 0;
-			for (var i = 0; i < cl; i++){
-				if (childItems[i] !== 1 ) continue;
-				this.items.push(childItems[i]);
-			}			
-			this.lastItem = this.items[this.items.length - 1];
-
-			this._update();
-		},
-
-		//simple trigger routine
-		_trigger: function(cbName, arg){
-			try {
-				if (this.options[cbName]) this.options[cbName].call(this.$el, arg);
-				this.$el.trigger(cbName, [arg])
-			} catch (err){
-				throw (err);
-			}
-		},
-
-		//init item properties once item appended
-		_initItem: function(el){
-			var o = this.options;
-			//parse span
-			var	span = el.getAttribute("data-span") || 1;
-			span = (span === "all" ? o.maxCols : Math.max(0,Math.min( ~~(span), o.maxCols)));
-			el.span = span; //quite bad, but no choice: dataset is sloow
-
-			//save heavy style-attrs
-			var style = getComputedStyle(el);
-			el.mr = ~~(style.marginRight.slice(0, -2))
-			el.ml = ~~(style.marginLeft.slice(0, -2))
-			el.bt = ~~(style.borderTopWidth.slice(0, -2)) 
-			el.bb = ~~(style.borderBottomWidth.slice(0, -2))
-			el.mt = ~~(style.marginTop.slice(0, -2)) //ignored because of offsetTop instead of style.top
-			el.mb = ~~(style.marginBottom.slice(0, -2)); 
-
-			//set style
-			el.style.position = "absolute";
-			this._setItemWidth(el);
-
-			//parset float
-			var float = el.getAttribute("data-float") || el.getAttribute("data-column");
-			switch (float){
-				case null: //no float
-					el.floatCol = null;
-					break;
-				case "right":
-				case "last":
-					el.floatCol = -span;
-					break;
-				case "left":
-				case "first":
-					el.floatCol = 0;
-					break;
-				default: //int column
-					el.floatCol = ~~(float) - 1;
-					break;
-			}
-
-			if (o.animateShow) {
-				if (o.useTranslate3d){
-					//TODO: this below crashes chrome
-					//el.style[cssPrefix+"translate"] = "translate3d(0, " + this.lastHeights[this.colPriority[0]] + "px ,0)"
-				} else {
-					el.style.top = this.lastHeights[this.colPriority[this.colPriority.length-1]] + "px";
-					el.style.left = this.colWidth * this.colPriority[this.colPriority.length-1] + "px";							
-				}
-				el.removeAttribute("hidden");
-			}
-		},
-
-		_initLayoutParams: function(){
-			var self = this, o = self.options,
-				cStyle = window.getComputedStyle(self.el),
-				i = 0,
-				prevCols = self.lastItems.length;
-
-			self.pl = ~~(cStyle.paddingLeft.slice(0,-2));
-			self.pt = ~~(cStyle.paddingTop.slice(0, -2));
-			self.pr = ~~(cStyle.paddingRight.slice(0, -2));
-			self.pb = ~~(cStyle.paddingBottom.slice(0, -2));
-
-			self.lastHeights.length = 0;
-			self.colPriority.length = 0; //most left = most minimal column
-			self.baseOrder.length = 0;
-
-			self.colWidth = self.el.clientWidth - self.pl - self.pr;
-
-			self.lastItems.length = ~~(self.colWidth / o.colMinWidth) || 1; //needed length
-
-			var top = o.useTranslate3d?0:self.pt;
-			for (i = 0; i < self.lastItems.length; i++){
-				self.lastHeights.push(top);
-				self.baseOrder.push(i);
-				self.colPriority.push(i);
-			}
-
-			self.colWidth /= self.lastItems.length;
-
-			//console.log(prevCols + "->" + self.lastItems.length);
-			if (!o.useCalc || prevCols !== self.lastItems.length) {
-				//set item widths carefully - if columns changed or px widths used
-				for (var i = self.items.length; i--;){
-					this._setItemWidth(self.items[i]);
-				}
-			}
-
-			return self.lastItems.length;
-		},
-
-		//full update of layout
-		_updateInterval: 0,
-		_update: function(from, to){
-			//window.start = Date.now()
-			var self = this, o = self.options,
-				i = 0,
-				start = from || 0,
-				end = to || self.items.length,
-				colsNeeded = self._initLayoutParams();
-
-			//console.log("beforePlace:" + this.lastItems.length)
-			for (i = start; i < end; i++){
-				self._placeItem(self.items[i]);
-			}
-			//console.log("afterPlace:" + this.lastItems.length)
-
-			self._maximizeHeight();
-			self._trigger('reflow');
-			//console.log("time elapsed: " + (Date.now() - window.start) + "ms")
-		},
-
-		//set item width based on span/colWidth
-		_setItemWidth: function(el){
-			var span = el.span > this.lastItems.length ? this.lastItems.length : el.span,
-				cols = this.lastItems.length,
-				colWeight = span/cols;
-			if (this.options.useCalc){
-				el.w = (100 * colWeight);
-				el.style.width = this.calcPrefix + "(" + (100 * colWeight) +"% - " + (el.mr + el.ml + (this.pl + this.pr) * colWeight) + "px)";
-			} else {
-				el.w = ~~(this.colWidth * span - (el.ml + el.mr))
-				el.style.width =  el.w + "px";
-			}
-		},
-
-		_placeItem: function(e){
-			var self = this, o = self.options;
-
-			var lastHeights = self.lastHeights,
-				lastItems = self.lastItems,
-				colPriority = self.colPriority,
-				minCol = 0, minH = 0,
-				h = 0, c = 0, t = 0, end = 0, start = 0,
-				span = e.span > lastItems.length ? lastItems.length : e.span,
-				newH = 0,
-				spanCols = [], //numbers of spanned columns
-				spanHeights = [], //heights of spanned columns
-				style,
-				floatCol = e.floatCol;
-
-			//console.log("------ item")
-			//console.log("span:"+span)			
-
-			//Find proper column to place item
-			//console.log(colPriority)
-			if (floatCol){
-				floatCol = floatCol > 0 ? Math.min(floatCol, lastItems.length - span) : (lastItems.length + floatCol);
-			}
-			if (span === 1){
-				//Single-span element
-				if (floatCol === null){
-					//no align
-					minCol = colPriority.shift();
-				} else {
-					//predefined column to align
-					minCol = floatCol;
-					for (c = 0; c < colPriority.length; c++){
-						if (colPriority[c] == minCol){
-							colPriority.splice(c, 1);
-							break;
+			isIE6 = !-[1,] && !window.XMLHttpRequest,
+		
+			ajaxTimes = 0,		// 已向服务器请求的次数
+			isLoading = false,	// 是否正在加载数据
+			isFinish = false,	// true时不再向服务器发送请求
+			
+			colsHeight = [],	// 用于存储每列的高度
+			minColsIndex = 0,	// 最低那列的下标
+			
+			jsonCache = [],		// 服务器返回的JSON缓存数据
+			
+			wf_box_top = 0,		// $wf_box 的相对视图的位置高度
+			wf_item_top = 0,	// 瀑布流块的top, left值
+			wf_item_left = 0,
+			
+			// 一些jQ对象
+			$wf_box, $wf_col, 
+			$wf_col_temp, $wf_col_items,
+			$wf_result, $backTop,
+			
+			// 异步请求函数
+			ajaxFunc = $.isFunction(opts.ajaxFunc) ?
+						opts.ajaxFunc :
+						function(success, error){
+							$.ajax({
+								type: 'GET',
+								url: opts.url,
+								cache: false,
+								data: opts.params,
+								dataType:'json',
+								timeout: 60000,
+								success: success,
+								error: error
+							});
+						},
+			// 生成html字符串函数
+			createHtml = $.isFunction(opts.createHtml) ?　
+					opts.createHtml　:
+					function(data){
+						return '<div class="wf_item_inner">' +
+								  '<a href="'+ data.href +'" class="thumb" target="_blank">' +
+									'<img class="'+opts.imgClass+'"  src="'+ data.imgSrc +'" />' +
+								  '</a>' +
+								  '<h3 class="title"><a href="'+ data.href +'" target="_blank">'+ data.title +'</a></h3>' +
+								  '<p class="desc">'+ data.describe +'</p>' +
+							  '</div>';
+					};
+		
+		
+		
+		// usage:
+		// fixedPosition(elem, {top:0, left:0});
+		// fixedPosition(elem, {bottom:0, right:0});
+		var fixedPosition = function(){
+			var html = document.getElementsByTagName('html')[0],
+				dd = document.documentElement,
+				db = document.body,
+				doc = dd || db;
+			
+			// 给IE6 fixed 提供一个"不抖动的环境"
+			// 只需要 html 与 body 标签其一使用背景静止定位即可让IE6下滚动条拖动元素也不会抖动
+			// 注意：IE6如果 body 已经设置了背景图像静止定位后还给 html 标签设置会让 body 设置的背景静止(fixed)失效
+			if (isIE6 && db.currentStyle.backgroundAttachment !== 'fixed') {
+				html.style.backgroundImage = 'url(about:blank)';
+				html.style.backgroundAttachment = 'fixed';
+			};
+			
+			// pos = {top:0, right:0, bottom:0, left:0}
+			return isIE6 ? 
+				function(elem, pos){
+					var style = elem.style,
+						dom = '(document.documentElement || document.body)'; 
+					
+					if(typeof pos.left !== 'number'){
+						pos.left = doc.clientWidth - pos.right - elem.offsetWidth; 
+					}
+					if(typeof pos.top !== 'number'){
+						pos.top = doc.clientHeight - pos.bottom - elem.offsetHeight; 
+					}
+					
+					elem.style.position = 'absolute';
+					style.removeExpression('left');
+					style.removeExpression('top');
+					style.setExpression('left', 'eval(' + dom + '.scrollLeft + ' + pos.left + ') + "px"');
+					style.setExpression('top', 'eval(' + dom + '.scrollTop + ' + pos.top + ') + "px"');
+				} : 
+				function(elem, pos){
+					var style = elem.style;
+						
+					style.position = 'fixed';
+					
+					if(typeof pos.left === 'number'){
+						style.left = pos.left + 'px';
+					}else{
+						style.left = 'auto'; 
+						style.right = pos.right + 'px';
+					}
+					
+					if(typeof pos.top === 'number'){
+						style.top = pos.top + 'px';
+					}else{
+						style.top = 'auto'; 
+						style.bottom = pos.bottom + 'px';
+					}
+				 
+				};
+		}();
+		
+		
+		// 异步获取数据
+		function getJSONData(){
+			if(!(isFinish || isLoading)){ // 确保上一次加载完毕才发送新的请求
+				// 滚动条下拉时判断是否需要向服务器请求数据或者是处理缓存数据
+				if(colsHeight.minHeight + wf_box_top < $(window).height() + $(window).scrollTop()){
+					// 如果缓存还有数据，直接处理数据
+					if(jsonCache.length > 0){
+						dealData();
+					}else{
+						if(opts.ajaxTimes === 'infinite' || ajaxTimes < opts.ajaxTimes){
+							showMsg('loading');
+							// 传参给服务器
+							opts.params.ajax = ++ajaxTimes;
+							ajaxFunc(
+								function(jsonData){
+									try{
+										if(typeof jsonData === 'string') jsonData = $.parseJSON(jsonData);
+										if($.isEmptyObject(jsonData) || typeof jsonData === 'string'){
+											showMsg('finish');
+										}else{
+											jsonCache = jsonCache.concat(jsonData).reverse();
+											dealData();
+										}
+									}
+									catch(e){
+										showMsg('error');
+									}
+								}, 
+								function(){
+									showMsg('error');
+								}
+							);
+									
+						}else{
+							showMsg('finish');
 						}
 					}
-				}
-				spanCols.push(minCol);
-				minH = lastHeights[minCol];
-			} else if (span >= lastItems.length){//Full-span element
-				minCol = 0;
-				minH = lastHeights[colPriority[colPriority.length - 1]];
-				spanCols = self.baseOrder.slice();
-				spanCols.length = lastHeights.length;
-				colPriority.length = 0;
-			} else {//Some-span element
-				if (floatCol !== null){
-					minCol = floatCol;
-					minH = Math.max.apply(Math, lastHeights.slice(minCol, minCol + span));
-					//console.log(lastHeights.slice(minCol, span))
-					//console.log("fCol:" + floatCol + " minH: " + minH)
-				} else {
-					//Make span heights alternatives
-					spanHeights.length = 0;
-					minH = Infinity; minCol = 0;
-					for (c = 0; c <= lastItems.length - span; c++){
-						spanHeights[c] = Math.max.apply(Math, lastHeights.slice(c, c+span))
-						if (spanHeights[c] < minH){
-							minCol = c;
-							minH = spanHeights[c];
-						}
-					}
-				}
-				//Replace priorities
-				for (c = 0; c < colPriority.length; ){
-					if (colPriority[c] >= minCol && colPriority[c] < minCol + span){
-						spanCols.push(colPriority.splice(c, 1)[0])
-					} else {c++}
+					
 				}
 			}
-
-			//console.log(spanCols)
-			//console.log(lastHeights)
-			//console.log("↑ spanCols to ↓")
-
-			//TODO: correct to work ok with options
-			e.top = ~~minH; //stupid save value for translate3d
-			if (o.useTranslate3d) {
-				var offset = (100 * minCol/span) + "% + " + ~~((e.ml + e.mr) * minCol/span) + "px";
-				e.style[cssPrefix + "transform"] = "translate3d(" + this.calcPrefix + "(" + offset + "), " + e.top + "px, 0)";
-				//e.style[cssPrefix + "transform"] = "translate3d(" + ~~(self.colWidth * minCol + self.pl) + "px, " + e.top + "px, 0)";			
-			} else {
-				e.style.top = e.top + "px";
-				e.style.left = self.colWidth * minCol + self.pl + "px";
-			}
-
-			//if element was added first time and is out of flow - show it
-			//e.style.opacity = 1;
-			e.removeAttribute("hidden")
-
-			newH = self._getBottom(e); //this is the most difficult operation (e.clientHeight)
-			for (t = 0; t < spanCols.length; t++) {
-				lastItems[spanCols[t]] = e;
-				self.lastHeights[spanCols[t]] = newH;
-			}
-
-			//console.log(lastItems)
-			//console.log("↑ self.lastHeights to ↓")
-			//console.log(self.lastHeights)
-			//console.log("minCol:"+minCol+" minH:"+minH+" newH:"+newH)
-			//console.log(colPriority)
-			//console.log("↑ colPriorities to ↓")
-
-			//Update colPriority
-			for (c = colPriority.length; c--;){
-				h = self.lastHeights[colPriority[c]];
-				if (newH >= h){
-					Array.prototype.splice.apply(colPriority, [c+1,0].concat(spanCols));
-					break;
-				}
-			}
-			if (colPriority.length < lastHeights.length){
-				Array.prototype.unshift.apply(colPriority, spanCols)
-				//self.colPriority = spanCols.concat(colPriority)
-			}
-		},
-
-		_getBottom: function(e) {
-			if (!e) return 0//this.pt;
-			//TODO: memrize height, look for height change to avoid reflow
-			return e.top + e.clientHeight + e.bt + e.bb + e.mb + e.mt;
-		},
-
-		_maximizeHeight: function(){
-			var top = this.options.useTranslate3d ? this.pt : 0;
-			this.el.style.minHeight = this.lastHeights[this.colPriority[this.colPriority.length - 1]] + this.pb + top + "px";
 		}
 		
-	})
-
-
-	$.fn.waterfall = function (arg, arg2) {
-		if (typeof arg == "string") {//Call API method
-			return $(this).each(function (i, el) {
-				$(el).data("waterfall")[arg](arg2);
-			})
-		} else {
-			var $this = $(this),
-			opts = $.extend({},$.parseDataAttributes(this[0]),arg);
-			if (opts.width && !opts.colMinWidth) {
-				opts.colMinWidth = opts.width
-			}
-			var wf = new Waterfall($this, opts);
-			if (!$this.data("waterfall")) $this.data("waterfall", wf);
-			return wf;
-		}
-	}
-
-
-	//Simple options parser. The same as $.fn.data(), or element.dataset but for zepto
-	if (!$.parseDataAttributes) {
-		$.parseDataAttributes = function(el){
-			var data = {};
-			if (el.dataset) {
-				$.extend(data, el.dataset);
-			} else {
-				[].forEach.call(el.attributes, function(attr) {
-					if (/^data-/.test(attr.name)) {
-						var camelCaseName = attr.name.substr(5).replace(/-(.)/g, function ($0, $1) {
-							return $1.toUpperCase();
-						});
-						data[camelCaseName] = attr.value;
+		// 处理返回的数据
+		function dealData(){
+			var perNum = typeof opts.perNum === 'number' ? opts.perNum : opts.colNum,
+				data = null,
+				wf_col_height = $wf_col.height(),
+				$wf_item, $wf_img, htmlStr;
+			// 确保所有图片都已知宽高
+			loadImg(jsonCache, opts.imgUrlName, function(){
+				while(perNum-- > 0 && (data = jsonCache.pop())){
+					
+					minColsIndex = getColsIndex(colsHeight)[0];
+					
+					wf_item_left = minColsIndex * (opts.colWidth + opts.marginLeft);
+					wf_item_top = colsHeight[minColsIndex] + opts.marginTop;
+					
+					htmlStr = createHtml(data);
+					
+					$wf_item = $('<div>').addClass(opts.itemClass).html(htmlStr)
+								.css({width:opts.colWidth, left: wf_item_left, top: wf_item_top})
+								.appendTo($wf_col);
+					$wf_img = $wf_item.find('.'+opts.imgClass);
+					$wf_img.height($wf_img.width() / data.width * data.height);
+					
+					if(opts.isAnimation){
+						$wf_item.css({opacity:0}).animate({
+													opacity: 1
+												}, 800);
 					}
-				});
-			}
-			return data;
+					
+					// 更新每列的高度
+					colsHeight[minColsIndex] = wf_item_top + $wf_item.outerHeight();
+					if( colsHeight[minColsIndex] > colsHeight.maxHeight ){
+						colsHeight.maxHeight = colsHeight[minColsIndex];
+					}
+					$wf_col.height(colsHeight.maxHeight);
+				}
+				
+				isLoading = false;
+				$wf_result.hide();
+				
+				// 保证浏览器有效滚动
+				getJSONData();
+				
+			});
 		}
-	}
-
-	//prefix/features detector
-	function detectCSSPrefix(property){
-		if (!property) property = "transform";
-
-		var style = document.defaultView.getComputedStyle(document.body, "");
-		if (style[property]) return "";
-		if (style["-webkit-" + property]) return "-webkit-";
-		if (style["-moz-" + property]) return "-moz-";
-		if (style["-o-" + property]) return "-o-";
-		if (style["-khtml-" + property]) return "-khtml-";
-
-		return false;
-	}
-
-	//autostart
-	$(function () {
-		var defClass = window.waterfall && window.waterfall.defaultClass || Waterfall.defaultClass;
-
-		$("." + defClass).each(function (i, e){
-			var $e = $(e),
-				opts = window.waterfall || {};
-			$e.waterfall(opts);
+		
+		// 排列瀑布流的块
+		function realign(){
+			var colNum = 0,
+				i = 0,
+				backTop_left =  0,
+				speed = 0;
+			
+			// 计算出当前屏幕可以排多少列
+			colNum = Math.floor(($wf_box.width() + opts.marginLeft) / (opts.colWidth + opts.marginLeft));
+			
+			if(colNum > 0 && colNum !== opts.colNum){
+				opts.colNum = colNum;
+				$wf_col.width((opts.colWidth+opts.marginLeft) * opts.colNum - opts.marginLeft);
+				
+				// 重新调整存储列
+				for(i=0; i<opts.colNum; i++){
+					colsHeight[i] = 0;
+				}
+				colsHeight.length = opts.colNum;
+				
+				$wf_col_items = $wf_col.children('.wf_item');
+				$wf_col_items.each(function(num, value){
+					minColsIndex = getColsIndex(colsHeight)[0];
+					wf_item_top = colsHeight[minColsIndex] + opts.marginTop;
+					wf_item_left = minColsIndex * (opts.colWidth + opts.marginLeft);
+					
+					
+					if(opts.isAnimation) speed = 300;
+					$(this).width(opts.colWidth).animate({
+													left:wf_item_left, 
+													top:wf_item_top
+												}, speed);
+					
+					
+					colsHeight[minColsIndex] = wf_item_top + $(this).outerHeight();
+				});
+				
+				getColsIndex(colsHeight);
+				$wf_col.height(colsHeight.maxHeight);
+				
+				getJSONData();
+			}
+			
+			// 返回顶部按钮位置
+			backTop_left = $wf_col.offset().left + ($wf_col.width() + $wf_box.width()) / 2 - $backTop.width(); 
+			
+			fixedPosition($backTop[0], {
+				left: backTop_left,
+				bottom: 0
+			});
+			
+		}
+		
+		// 显示结果信息
+		function showMsg(type){
+			switch(type){
+				case 'loading':
+					isLoading = true;
+					$wf_result.html('').addClass('wf_loading').show();
+					break;
+				case 'error':
+					$wf_result.removeClass('wf_loading').show().html('数据格式错误，请返回标准的Json数据或Json格式字符串！');
+					isFinish =  true;
+					break;
+				case 'finish':
+					$wf_result.removeClass('wf_loading').show().html('已加载完毕，没有更多了！');
+					isFinish = true;
+					break;
+			}
+		}
+		
+		return this.each(function(){
+			if($(this).data('_wf_is_done_')) return true;
+			
+			$wf_box = $(this).addClass('waterfall').data('_wf_is_done_', true);
+			wf_box_top = $wf_box.offset().top;	// 保存 $wf_box 的相对视图的位置高度
+			
+			$wf_col = $wf_box.children('.wf_col');
+			$wf_col.length === 0 && ($wf_col = $('<div>').addClass('wf_col').appendTo($wf_box));
+			$wf_result = $('<div>').addClass('wf_result').appendTo($wf_box);
+			
+			// 增加返回顶部按钮
+			$backTop = $('<a></a>').attr('id', 'backTop').attr('title', '返回顶部').appendTo(document.body);
+			$backTop.css('opacity', 0).bind('click', function(){
+				$('body,html').stop(true).animate({
+					scrollTop: wf_box_top
+				}, 500);
+			});
+			
+			$(document.body).css('overflow', 'scroll');
+			// 排列已经存在的瀑布流块
+			realign();
+			$(document.body).css('overflow', 'auto');
+			
+			// 第一次拉取图片时，保证图片能填满窗出现滚动
+			getJSONData();
+			
+			// 注册滚动条事件
+			$(window).bind('scroll', function(){
+				if($(window).scrollTop() > wf_box_top){
+					$backTop.stop(true).animate({opacity: 1}, 500);
+				}else{
+					$backTop.stop(true).animate({opacity: 0}, 500);
+				}
+				getJSONData();
+				
+			// 注册窗口改变大小事件
+			}).bind('resize', function(){
+				throttle(realign);
+			});
 		});
-	})
+	};
+	
+	// 默认配置
+	$.fn.waterfall.defaults = {
+		itemClass: 'wf_item',	// 砖块类名
+		imgClass: 'thumb_img',	// 图片类名
+		colWidth: 235,			// 列宽(int)
+		marginLeft: 15,			// 每列的左间宽(int)
+		marginTop: 15,			// 每列的上间宽(int)
+		perNum: 'auto',			// 每次下拉时显示多少个(默认是列数)
+		isAnimation: true,		// 是否使用动画效果
+		ajaxTimes: 'infinite',	// 限制异步请求的次数(int) 字符串'infinite'表示无限加载
+		imgUrlName: 'imgSrc',	// 在json里表示图片路径的属性名称(用于预加载图片获取高宽)
+		params: {},				// 键值对，发送到服务器的数据。将自动转换为请求字符串格式。
+								// 如 {foo:["bar1", "bar2"]} 转换为 "&foo=bar1&foo=bar2"。
+		url: '',				// 数据来源(ajax加载，返回json格式)，传入了ajaxFunc参数，此参数可省略(string)
+		// 自定义异步函数, 第一个参数为成功回调函数，第二个参数为失败回调函数
+		// 当执行成功回调函数时，传入返回的JSON数据作为参数
+		ajaxFunc: null,		// (function)
+		createHtml: null	// 自定义生成html字符串函数,参数为一个信息集合，返回一个html字符串(function)
+		
+	};
+	
+	
+	/*****************一些全局函数*********************/
+	/**
+	 * 图片头数据加载就绪事件
+	 * @参考 	http://www.planeart.cn/?p=1121
+	 * @param	{String}	图片路径
+	 * @param	{Function}	尺寸就绪 (参数1接收width; 参数2接收height)
+	 * @param	{Function}	加载完毕 (可选. 参数1接收width; 参数2接收height)
+	 * @param	{Function}	加载错误 (可选)
+	 */
+	var imgReady = (function(){
+		var list = [], intervalId = null,
+		
+		// 用来执行队列
+		tick = function () {
+			var i = 0;
+			for (; i < list.length; i++) {
+				list[i].end ? list.splice(i--, 1) : list[i]();
+			};
+			!list.length && stop();
+		},
 
-})(window.jQuery || window.Zepto);
+		// 停止所有定时器队列
+		stop = function () {
+			clearInterval(intervalId);
+			intervalId = null;
+		};
+
+		return function (url, ready, load, error) {
+			var check, width, height, newWidth, newHeight,
+				img = new Image();
+			
+			
+			if(!url){
+				error && error();
+				return;
+			}
+			
+			img.src = url;
+
+			// 如果图片被缓存，则直接返回缓存数据
+			if (img.complete) {
+				ready(img.width, img.height);
+				load && load(img.width, img.height);
+				return;
+			};
+			
+			// 检测图片大小的改变
+			width = img.width;
+			height = img.height;
+			check = function () {
+				newWidth = img.width;
+				newHeight = img.height;
+				if (newWidth !== width || newHeight !== height ||
+					// 如果图片已经在其他地方加载可使用面积检测
+					newWidth * newHeight > 1024
+				) {
+					ready(newWidth, newHeight);
+					check.end = true;
+				};
+			};
+			check();
+			
+			// 加载错误后的事件
+			img.onerror = function () {
+				error && error();
+				check.end = true;
+				img = img.onload = img.onerror = null;
+			};
+			
+			// 完全加载完毕的事件
+			img.onload = function () {
+				load && load(img.width, img.height);
+				!check.end && check();
+				// IE gif动画会循环执行onload，置空onload即可
+				img = img.onload = img.onerror = null;
+			};
+
+			// 加入队列中定期执行
+			if (!check.end) {
+				list.push(check);
+				// 无论何时只允许出现一个定时器，减少浏览器性能损耗
+				if (intervalId === null) intervalId = setInterval(tick, 40);
+			};
+		};
+	})();
+	
+	// 快速获取图片头数据，加载就绪后执行回调函数
+	function loadImg(jsonData, imgUrlName, callback){
+		var count = 0,
+			i = 0,
+			intervalId = null,
+			data = null,
+			imgSrc = 
+			done = function(){
+				 if(count === jsonData.length) {
+					 clearInterval(intervalId);
+					 callback && callback();
+				 }
+			};
+		for(; i<jsonData.length; i++){
+			data = jsonData[i];
+			data.height = parseInt(data.height);
+			data.width = parseInt(data.width);
+			
+			// 如果已知图片的高度，则跳过
+			if(data.height >= 0 && data.width >= 0){
+				++count;
+			}else{
+				(function(data){
+					imgReady(data[imgUrlName], function(width,height){
+						// 图片头数据加载就绪，保存宽高
+						data.width = width;
+						data.height = height;
+						++count;
+					}, null, function(){
+						// 图片加载失败，替换成默认图片
+						data.width = 208;
+						data.height = 240;
+						data.imgSrc = 'images/default.jpg';
+						++count;
+					});
+				})(data);
+			}
+		}
+		
+		intervalId = setInterval(done, 40);
+	}
+	
+	/*
+	 * 函数节流：避免因为高频率的更改导致浏览器挂起或崩溃，如onresize事件处理程序尝试复杂的DOM操作
+	 * 思路：在一定时间内重复执行某操作只执行一次。
+	 */
+	function throttle(method, context){
+		clearTimeout(method.tid);
+		context = context || null;
+		method.tid = setTimeout(function(){
+			method.call(context);				
+		},100);
+	}
+	
+	// 返回从小到大排序的数组的下标的数组
+	// e.g. 传入数组[300,200,250,400] 返回[1,2,0,3]
+	function getColsIndex(arr){
+		var clone = arr.slice(),	// 数组副本，避免改变原数组
+			ret = [], 	// 对应下标数组
+			len = arr.length,
+			i, j, temp;
+			
+		for(i=0;i<len;i++){
+			ret[i] = i;
+		}
+		
+		//外层循环(冒泡排序法：从小到大)
+		for(i=0;i<len;i++){
+			//内层循环
+			for(j=i;j<len;j++){
+				if(clone[j] < clone[i]){
+					//交换两个元素的位置
+					temp=clone[i];
+					clone[i]=clone[j];
+					clone[j]=temp;
+					
+					temp=ret[i];
+					ret[i]=ret[j];
+					ret[j]=temp;
+				}
+			}
+		}
+		arr.minHeight = arr[ret[0]];
+		arr.maxHeight = arr[ret[ret.length -1]];
+		return ret;
+	}
+
+})(jQuery, window, document);
