@@ -32,6 +32,9 @@
 
 
 <script src="<?= get_template_directory_uri(); ?>/js/slide.js"></script>
+
+
+
 <script>
 
 
@@ -113,9 +116,42 @@ Slide({
     }
 });
 
+// 视频弹层
+function openVideo(){
+	var pop = $("#pop");
+	pop.show();
+	function pos(){
+		pop.css({
+			position:"fixed",
+			top:$(window).height()/2 - 500/2,
+			left:$(window).width()/2 - 900/2
+		});
+	}
+	$(window).on("resize",function(){
+		pos();
+	});
+	$("#shadow").show();
+}
 
-
+function closeVideo(){
+	$("#pop").hide();
+	$("#shadow").hide();
+}
 
 </script>
+<div id="shadow" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background-color:black;opacity:.5"></div>
+<div id="pop" style="width:903px;display:none;z-index:999;">
+  <div style=" background:url(images/v-l.png) no-repeat; width: 55px; height:500px; float:left; color: #999;">
+  <ul style="list-style:none; width:32px; padding:0; padding-left: 12px; padding-top:134px; margin:0;">
+  	<li style="padding-bottom:3px;">分享</li>
+    <li style="padding-bottom:7px; "><a href="#"><img src="<?= get_template_directory_uri(); ?>/images/weibo-icon.jpg" width="32" height="32" style="line-height:0; display:block;"></a></li>
+    <li style="padding-bottom:7px;"><a href="#"><img src="<?= get_template_directory_uri(); ?>/images/renren.jpg" width="32" height="32" style="line-height:0; display:block;"></a></li>
+    <li style="padding-bottom:7px;"><a href="#"><img src="<?= get_template_directory_uri(); ?>/images/qq.jpg" width="32" height="32" style="line-height:0; display:block;"></a></li>
+    <li style="padding-bottom:7px;"><a href="#"><img src="<?= get_template_directory_uri(); ?>/images/kaixin.jpg" width="32" height="32" style="line-height:0; display:block;"></a></li>
+    <li><a href="#"><img src="<?= get_template_directory_uri(); ?>/images/douban.jpg" width="32" height="32"></a></li>
+  </ul>
+  </div>
+    <div style="width: 848px; height: 500px;float:right;"><img src="<?= get_template_directory_uri(); ?>/images/v-r.png" width="848" height="500"></div>
+</div>
 
 <?php get_footer(); ?>
