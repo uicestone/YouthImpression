@@ -53,6 +53,25 @@ img{border:0;}
 .header_nav ul li a img{
 	display: block;
 }
+.header_nav{
+	padding-left: 20px;
+	background: url(../images/nav-delimiter.png) left no-repeat;
+}
+.header_nav ul li{
+	padding: 0 40px 0 20px;
+	font-size: 17px;
+	background: url(../images/nav-delimiter.png) right no-repeat;
+}
+.header_nav ul li a{
+	color: #FFF;
+}
+.header_nav ul li.current-menu-item a, .header_nav ul li.current-menu-ancestor a{
+	color: #E72605;
+}
+.header_nav ul li.current-menu-item a, .header_nav ul li.current-menu-ancestor a, .header_nav ul li a:hover{
+	display: block;
+	background: url(../images/nav-indicator.png) bottom no-repeat;
+}
 .weibo{
 	width: 155px;
 	float: right;
