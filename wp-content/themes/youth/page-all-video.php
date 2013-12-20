@@ -4,9 +4,9 @@
 <div id="content-all2">    
 	<div id="video-banner">
 		<ul class="slides">
-        	<li data-desc="A"><a href="#"><img src="http://stimgcn1.s-msn.com/msnportal/dict/bingcenter/desktop/bg_desktop1.jpg" /></a></li>
-        	<li data-desc="B"><a href="#"><img src="http://s.cn.bing.net/az/hprichbg/rb/DyedSilkPieceHanging_ZH-CN8207662295_1366x768.jpg" /></a></li>            	
-            <li data-desc="C"><a href="#"><img src="http://ppcdn.500px.org/52454318/5a85c84af40c52aab42a6c23104954255b4c6634/2048.jpg" /></a></li>
+			<?php foreach(get_posts(array('category_name'=>'video')) as $post){?>
+			<li data-desc="<?php echo $post->post_title; ?>"><a href="<?php echo get_permalink($post->ID); ?>"><?php echo get_the_post_thumbnail($post->ID,'all-video-slide'); ?></a></li>
+			<?php } ?>
 		</ul>
 
 		<div class="prev">

@@ -4,7 +4,7 @@
  <div id="content-all">    
     <div id="Product-content1">
         <ul>
-	    <?php foreach(get_posts(array('category'=>'product')) as $index => $product){ ?>
+	    <?php foreach(get_posts(array('category_name'=>'product')) as $index => $product){ ?>
 	    <li class="<?php if($index===0){?>active<?php } ?>"><a href="<?php echo get_permalink($product->ID); ?>"><?php echo get_the_post_thumbnail($product->ID,'product-slide'); ?></a></li>
 	    <?php } ?>
         </ul>
