@@ -11,15 +11,7 @@
                 </div>
                 <div class="contactus-rightall">
                 	<h1>请留下您的联系方式 我们将与您一对一服务</h1>
-                	<div class="contactus-right">
-                		<ul>
-                        	<li>姓名  <input name="" type="text" /></li>
-                        	<li>电话  <input name="" type="text" /></li>
-                        	<li>邮箱  <input name="" type="text" /></li>
-                        	<li><span style=" vertical-align: top;">留言</span>  
-                        		<textarea name="" cols="" rows=""></textarea></li>
-                        </ul>
-                	</div>
+			<?php echo do_shortcode('[contact-form-7 id="28" title="联系我们"]'); ?>
                 </div>
             </div>
             <div class="back-btn">
