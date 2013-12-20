@@ -1,2 +1,33 @@
 <?php get_header(); ?>
+
+
+ <div id="content-all">    
+    <div id="Product-content1">
+        <ul>
+            <li class="active"><img src="<?= get_template_directory_uri(); ?>/images/pro1-content.png" /></li>
+            <li><img src="<?= get_template_directory_uri(); ?>/images/pro2-content.png" /></li>
+            <li><img src="<?= get_template_directory_uri(); ?>/images/pro3-content.png" /></li>
+            <li><img src="<?= get_template_directory_uri(); ?>/images/pro4-content.png" /></li>
+        </ul>
+    </div>
+    <div class="Pro-click">
+        <div class="prev">
+            <a href="javascript:;" class="arr-left"><img src="<?= get_template_directory_uri(); ?>/images/left-icon.png" width="11" height="17" /></a>
+        </div>
+        <ul>
+            <li><a href="javascript:;"><img src="<?= get_template_directory_uri(); ?>/images/pro-nowClick.png" width="13" height="13" /></a></li>
+            <li><a href="javascript:;"><img src="<?= get_template_directory_uri(); ?>/images/pro-noClick.png" width="13" height="13" /></a></li>
+            <li><a href="javascript:;"><img src="<?= get_template_directory_uri(); ?>/images/pro-noClick.png" width="13" height="13" /></a></li>
+            <li><a href="javascript:;"><img src="<?= get_template_directory_uri(); ?>/images/pro-noClick.png" width="13" height="13" /></a></li>
+        </ul>
+        <div class="next">
+            <a href="javascript:;" class="arr-right"><img src="<?= get_template_directory_uri(); ?>/images/right-icon.png" width="11" height="17" /></a>
+        </div>
+    </div>
+    <div class="back-btn">
+        <a href="#"><img src="images/back.png" width="60" height="24" /></a>
+    </div>
+</div>
+
+<script src="<?= get_template_directory_uri(); ?>/js/slide.js"></script>
 <?php get_footer(); ?>
