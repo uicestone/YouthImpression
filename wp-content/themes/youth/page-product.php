@@ -4,10 +4,9 @@
  <div id="content-all">    
     <div id="Product-content1">
         <ul>
-            <li class="active"><img src="<?= get_template_directory_uri(); ?>/images/pro1-content.png" /></li>
-            <li><img src="<?= get_template_directory_uri(); ?>/images/pro2-content.png" /></li>
-            <li><img src="<?= get_template_directory_uri(); ?>/images/pro3-content.png" /></li>
-            <li><img src="<?= get_template_directory_uri(); ?>/images/pro4-content.png" /></li>
+	    <?php foreach(get_posts(array('category'=>'product')) as $index => $product){ ?>
+	    <li class="<?php if($index===0){?>active<?php } ?>"><a href="<?php echo get_permalink($product->ID); ?>"><?php echo get_the_post_thumbnail($product->ID,'product-slide'); ?></a></li>
+	    <?php } ?>
         </ul>
     </div>
     <div class="Pro-click">

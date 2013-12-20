@@ -9,6 +9,10 @@ register_nav_menu('foot', '底部导航');
 
 add_theme_support( 'post-thumbnails' );
 
+add_image_size( 'all-video-slide', 792, 400, true );
+add_image_size( 'all-video-waterfall', 190, 500);
+add_image_size( 'product-slide', 1120, 618 );
+
 /**
  * 样式和脚本的声明及其依赖
  * 通过wp_header()来载入
