@@ -1,4 +1,12 @@
-<?php get_header(); ?>
+<!doctype html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>首页</title>
+<?php wp_head(); ?>
+</head>
+<body>
+<div id="home-wrap">
 <div id="welcome-bg">
     <div id="welcome-bar">
         <div id="welcome-bigPic" class="bigPic-welcome">
