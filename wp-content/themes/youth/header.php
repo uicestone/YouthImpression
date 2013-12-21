@@ -10,6 +10,9 @@
 
 
 <div id="home-wrap">
+<?php if(is_home()){ ?>
+<div id="index_logo"><img src="<?= get_template_directory_uri(); ?>/images/index-logo.png" width="79" height="125" /></div>
+<?php }else if(!is_page("welcome")){ ?>
 <div id="header-allbg">
     <div id="header">
         <div class="logo">
@@ -25,3 +28,4 @@
         </div>
     </div>
 </div>
+<?php } ?>
