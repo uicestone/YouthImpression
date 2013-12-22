@@ -316,7 +316,7 @@
                     });;
                     break;
                 case 'finish':
-                    $wf_result.removeClass('wf_loading').show().html('已加载完毕，没有更多了！');
+                    $wf_result.removeClass('wf_loading').show();//.html('已加载完毕，没有更多了！');
                     isFinish = true;
                     break;
             }
