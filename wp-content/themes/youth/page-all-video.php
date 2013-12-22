@@ -83,7 +83,7 @@ user-select: none;
   </div>
   <div class="video-container">
   	<img src="<?= get_template_directory_uri(); ?>/images/v-r.png" width="848" height="500">
-  	<video width="820" height="470" src="http://qcyh.lc/wp-content/uploads/2013/12/echo-hereweare.mp4"></video>
+  	<div class="video"></div>
   </div>
 </div>
 
@@ -201,7 +201,6 @@ next.on("click",function(){
 (function(){
 var shadow = $("#shadow");
 var pop = $("#pop");
-var player = new MediaElementPlayer('#pop video');
 shadow.on("click",function(){
 	closeVideo();
 });
@@ -213,7 +212,10 @@ $(".slides").on("click","li",function(e){
 // 视频弹层
 function openVideo(videoSrc,href){
 	pop.show();
-
+	var video = $("<video src='" + videoSrc + "' width='820' height='470'></video>");
+	$(".video-container .video").empty().append(video);
+	console.log(video);
+	new MediaElementPlayer("#pop video");
 	function pos(){
 		pop.css({
 			position:"fixed",
@@ -224,7 +226,6 @@ function openVideo(videoSrc,href){
 	$(window).on("resize",function(){
 		pos();
 	});
-	player.setSrc(videoSrc);
 	shadow.show();
 	pos();
 }
