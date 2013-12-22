@@ -15,7 +15,7 @@
     <div id="header">
         <div class="logo">
             
-            <a href="#"><img src="<?= get_template_directory_uri(); ?>/images/logo.png" width="103" height="85" /></a>
+            <a href="<?php site_url(); ?>/index/"><img src="<?= get_template_directory_uri(); ?>/images/logo.png" width="103" height="85" /></a>
         </div>
         <div class="header_nav">
 	    <?php wp_nav_menu(array('nav'=>'primary','container'=>false)); ?>
