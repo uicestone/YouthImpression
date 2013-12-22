@@ -29,11 +29,15 @@ body{font:12px/1.5 \5B8B\4F53,sans-serif;}
 /* 瀑布流样式 */
 .waterfall{overflow:hidden;zoom:1;width:100%;}
 .wf_inner{margin:15px auto;}
-.wf_col{position:relative;min-height:473px;_height:473px;}
+.wf_col{position:relative;}
 .wf_item{
-	box-sizing:border-box;width:235px;
-	border:1px solid #d2d2d2;box-shadow:5px 3px 3px rgba(221,221,221,.32);color:#565656;
-	float:left;overflow:hidden;zoom:1;
+	box-sizing:border-box;
+	width:235px;
+	border:1px solid #d2d2d2;
+	color:#565656;
+	float:left;
+	overflow:hidden;
+	zoom:1;
 	position:absolute;
 }
 .wf_item_inner{margin:15px;}
