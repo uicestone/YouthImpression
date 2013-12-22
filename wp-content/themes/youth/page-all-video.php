@@ -204,6 +204,7 @@ var pop = $("#pop");
 shadow.on("click",function(){
 	closeVideo();
 });
+var player = null;
 
 $(".slides").on("click","li",function(e){
 	e.preventDefault();
@@ -212,10 +213,13 @@ $(".slides").on("click","li",function(e){
 // 视频弹层
 function openVideo(videoSrc,href){
 	pop.show();
-	var video = $("<video src='" + videoSrc + "' width='820' height='470'></video>");
-	$(".video-container .video").empty().append(video);
-	console.log(video);
-	new MediaElementPlayer("#pop video");
+	if(!player){
+		var video = $("<video src='" + videoSrc + "' width='820' height='470'></video>");
+		$(".video-container .video").empty().append(video);
+		player = new MediaElementPlayer("#pop video");
+	}else{
+		player.setSrc(videoSrc);
+	}
 	function pos(){
 		pop.css({
 			position:"fixed",
@@ -231,7 +235,7 @@ function openVideo(videoSrc,href){
 }
 
 function closeVideo(){
-	player.pause();
+	player && player.pause();
 	pop.hide();
 	shadow.hide();
 }
