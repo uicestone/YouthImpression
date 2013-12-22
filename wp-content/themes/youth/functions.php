@@ -23,6 +23,7 @@ add_action('wp_head', function(){
  */
 add_action( 'wp_enqueue_scripts', function(){
 	wp_enqueue_script('jquery');
+	wp_enqueue_script('mediaelement');
 	
 	wp_register_style('style', get_template_directory_uri().'/style.css');
 	wp_enqueue_style('style');

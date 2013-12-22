@@ -1,9 +1,5 @@
 <?php get_header(); ?>
 <link rel="stylesheet" href="<?= get_template_directory_uri(); ?>/css/waterfall.css">
-<link rel='stylesheet' id='mediaelement-css'  href='<?= includes_url() ?>/js/mediaelement/mediaelementplayer.min.css?ver=2.13.0' type='text/css' media='all' />
-<link rel='stylesheet' id='wp-mediaelement-css'  href='<?= includes_url() ?>/js/mediaelement/wp-mediaelement.css?ver=3.8' type='text/css' media='all' />
-<script type='text/javascript' src='<?= includes_url() ?>/js/mediaelement/mediaelement-and-player.min.js?ver=2.13.0'></script>
-<script type='text/javascript' src='<?= includes_url() ?>/js/mediaelement/wp-mediaelement.js?ver=3.8'></script>
 <!--[if lt IE 9]><script>document.createElement('video');</script><![endif]-->
 <style>
 #video-banner .prev,#video-banner .next{
@@ -101,7 +97,7 @@ $('#video-all-7').waterfall({
     isAnimation: true,        // 是否使用动画效果
     ajaxTimes: 3,    // 限制加载的次数(int) 字符串'infinite'表示无限加载 
     ajaxFunc: function(succ,err){
-        $.getJSON('all-video/more/page/' + page, function(data){
+        $.getJSON('more/page/' + page, function(data){
             succ(data);
             page+=1;
         },err);
