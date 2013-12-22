@@ -1,5 +1,4 @@
-<?php get_header(); ?>
-
+<?php get_header("simple"); ?>
     <div id="index-bg">
       <div class="index-menu">
             <div id="product_index" class="index-product">
