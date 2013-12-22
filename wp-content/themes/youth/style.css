@@ -510,3 +510,27 @@ img{border:0;}
 	display: inline-block;
 	position: absolute;
 }
+
+
+#pop .video-container{
+    width: 848px; 
+    height: 500px;
+    float:right;
+    position: relative;
+}
+
+#pop .video-container img{
+    width: 848px; 
+    height: 500px;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+#pop .mejs-container{
+    position: absolute;
+    /*width: 830px;
+    height: 500px;*/
+    top: 15px;
+    left: 15px;
+    background-color: #000;
+}

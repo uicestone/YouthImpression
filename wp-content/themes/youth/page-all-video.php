@@ -10,28 +10,6 @@
 -o-user-select: none;
 user-select: none;
 }
-#pop .video-container{
-    width: 848px; 
-    height: 500px;
-    float:right;
-    position: relative;
-}
-
-#pop .video-container img{
-    width: 848px; 
-    height: 500px;
-    position: absolute;
-    top: 0;
-    left: 0;
-}
-#pop .mejs-container{
-    position: absolute;
-    /*width: 830px;
-    height: 500px;*/
-    top: 15px;
-    left: 15px;
-    background-color: #000;
-}
 </style>
 <script src="<?= get_template_directory_uri(); ?>/js/waterfall.js"></script>
 <div id="content-all2">    
@@ -103,7 +81,7 @@ $('#video-all-7').waterfall({
         },err);
     },
     createHtml: function(data){
-        return '<a class="item" title="' + data.post_name + '" href="' + data.permlink + '">' + data.post_thumbnail + '<div class="desc">' +data.post_name+ '</div></a>';
+        return '<a class="item" data-video="' + (data.video||"") + '" title="' + data.post_name + '" href="' + data.permlink + '">' + data.post_thumbnail + '<div class="desc">' +data.post_name+ '</div></a>';
     }
 });
 
@@ -197,6 +175,11 @@ var player = null;
 $(".slides").on("click","li",function(e){
     e.preventDefault();
     openVideo($(this).attr("data-video"));
+});
+
+$(".waterfall").on("click",".item",function(e){
+    e.preventDefault();
+    openVideo($(this).attr("data-video")); 
 });
 // 视频弹层
 function openVideo(videoSrc,href){
