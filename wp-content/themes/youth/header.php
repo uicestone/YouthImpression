@@ -7,13 +7,9 @@
 
 <body>
 <div id="home-wrap">
-<?php if(is_home()){ ?>
-<div id="index_logo"><img src="<?= get_template_directory_uri(); ?>/images/index-logo.png" width="79" height="125" /></div>
-<?php }else{ ?>
 <div id="header-allbg">
     <div id="header">
         <div class="logo">
-            
             <a href="<?php site_url(); ?>/index/"><img src="<?= get_template_directory_uri(); ?>/images/logo.png" width="103" height="85" /></a>
         </div>
         <div class="header_nav">
@@ -25,4 +21,3 @@
         </div>
     </div>
 </div>
-<?php } ?>

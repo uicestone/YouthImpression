@@ -1,4 +1,6 @@
 <?php get_header("simple"); ?>
+
+<div id="index_logo"><img src="<?= get_template_directory_uri(); ?>/images/index-logo.png" width="79" height="125" /></div>
     <div id="index-bg">
       <div class="index-menu">
             <div id="product_index" class="index-product">
