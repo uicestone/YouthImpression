@@ -168,11 +168,14 @@
                                 function(jsonData){
                                     try{
                                         if(typeof jsonData === 'string') jsonData = $.parseJSON(jsonData);
-                                        if($.isEmptyObject(jsonData) || jsonData.length < 12 || typeof jsonData === 'string'){
+                                        if($.isEmptyObject(jsonData) || typeof jsonData === 'string'){
                                             showMsg('finish');
                                         }else{
                                             jsonCache = jsonCache.concat(jsonData).reverse();
                                             dealData();
+                                            if(jsonData.length < 12){
+                                                showMsg('finish');
+                                            }
                                         }
                                     }
                                     catch(e){
