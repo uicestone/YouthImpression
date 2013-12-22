@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>首页</title>
-<link rel="shortcut icon" href="<?php echo get_stylesheet_directory_uri(); ?>/images/favicon.ico" />
+<title><?php wp_title(); ?></title>
 <?php wp_head(); ?>
 </head>
 <body>
