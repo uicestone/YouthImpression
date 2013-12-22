@@ -101,7 +101,7 @@ $('#video-all-7').waterfall({
     isAnimation: true,        // 是否使用动画效果
     ajaxTimes: 3,    // 限制加载的次数(int) 字符串'infinite'表示无限加载 
     ajaxFunc: function(succ,err){
-        $.getJSON('/all-video/more/?posts_per_page=5?paged=' + page, function(data){
+        $.getJSON('all-video/more/paged/' + page, function(data){
             succ(data);
             page+=1;
         },err);
