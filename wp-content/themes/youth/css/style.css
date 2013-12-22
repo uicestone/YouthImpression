@@ -4,7 +4,7 @@ body {
 	text-align: left; 
 	color: #333333;
 	background: url(../images/all-bg.jpg) repeat-y;
-	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-family: "Microsoft Yahei", Verdana, Arial, Helvetica, sans-serif;
 	font-size: 12px;
 	line-height: 16px;
 }
@@ -60,7 +60,6 @@ img{border:0;}
 .header_nav ul li{
 	padding: 0 40px 0 20px;
 	font-size: 17px;
-	font-family: "Microsoft Yahei";
 	font-weight: bold;
 	background: url(../images/nav-delimiter.png) right no-repeat;
 }
@@ -189,6 +188,16 @@ img{border:0;}
 .contactus-rightall h1{
 	color:#d3325b;
 }
+.contactus-rightall input[type=submit]{
+	width:60px;
+	height:25px;
+	cursor: pointer;
+	text-indent: -199px;
+	background-image:url(../images/submit.png);
+	background-repeat: no-repeat;
+	background-color: transparent;
+	border:none;
+}
 .contactus-right{
 	width: 462px;
 	background: #FFF;
@@ -252,6 +261,7 @@ img{border:0;}
 	clear: both;
 }
 .hubo-time{
+	position: relative;
 	width: 950px;
 	margin: 0 auto;
 	clear: both;
@@ -280,7 +290,7 @@ img{border:0;}
 
 .hubo-track a{
 	position: absolute;
-	left: 651px;
+	display: none
 }
 
 
@@ -398,6 +408,7 @@ img{border:0;}
 #video-banner{
 	width:1387px;
 	height: 400px;
+	margin: 0 auto;
 	position: relative;
 	overflow: hidden;
 }
