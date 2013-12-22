@@ -162,14 +162,13 @@
                             opts.params.ajax = ++ajaxTimes;
                             console.log(opts.ajaxTimes === 'infinite' , ajaxTimes < opts.ajaxTimes , !needManual);
                             if(ajaxTimes >= opts.ajaxTimes){
-                                console.log("here");
                                 needManual = true;
                             }
                             ajaxFunc(
                                 function(jsonData){
                                     try{
                                         if(typeof jsonData === 'string') jsonData = $.parseJSON(jsonData);
-                                        if($.isEmptyObject(jsonData) || typeof jsonData === 'string'){
+                                        if($.isEmptyObject(jsonData) || jsonData.length < 12 || typeof jsonData === 'string'){
                                             showMsg('finish');
                                         }else{
                                             jsonCache = jsonCache.concat(jsonData).reverse();
