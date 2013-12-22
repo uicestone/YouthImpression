@@ -1,5 +1,15 @@
 <?php get_header(); ?>
 <link rel="stylesheet" href="<?= get_template_directory_uri(); ?>/css/waterfall.css">
+<style>
+#video-banner .prev,#video-banner .next{
+-webkit-user-select: none;  /* Chrome all / Safari all */
+-moz-user-select: none;     /* Firefox all */
+-ms-user-select: none;      /* IE 10+ */
+/* No support for these yet, use at own risk */
+-o-user-select: none;
+user-select: none;
+}
+</style>
 <script src="<?= get_template_directory_uri(); ?>/js/waterfall.js"></script>
 <div id="content-all2">    
 	<div id="video-banner">
@@ -7,14 +17,20 @@
 			<?php foreach(get_posts(array('category_name'=>'video')) as $post){?>
 			<li data-desc="<?php echo $post->post_title; ?>"><a href="<?php echo get_permalink($post->ID); ?>"><?php echo get_the_post_thumbnail($post->ID,'all-video-slide'); ?></a></li>
 			<?php } ?>
+
+			<li data-desc="1"><a href="#"><img src="http://www.bing.com/az/hprichbg/rb/EurasianRed_EN-US12831744194_1366x768.jpg" alt=""></a></li>
+			<li data-desc="2"><a href="#"><img src="http://www.bing.com/az/hprichbg/rb/EurasianRed_EN-US12831744194_1366x768.jpg" alt=""></a></li>
+			<li data-desc="3"><a href="#"><img src="http://www.bing.com/az/hprichbg/rb/EurasianRed_EN-US12831744194_1366x768.jpg" alt=""></a></li>
+			<li data-desc="4"><a href="#"><img src="http://www.bing.com/az/hprichbg/rb/EurasianRed_EN-US12831744194_1366x768.jpg" alt=""></a></li>
+			
 		</ul>
 
 		<div class="prev">
 			<div class="arr"></div>	
-			<span class="txt">A</span>
+			<span class="txt"></span>
 		</div>
 		<div class="next">
-			<span class="txt">C</span>
+			<span class="txt"></span>
 			<div class="arr"></div>	
 		</div>
 
@@ -30,14 +46,10 @@
     </div>
 </div>
 
-
-<script src="<?= get_template_directory_uri(); ?>/js/slide.js"></script>
-
-
-
 <script>
 
-
+(function(){
+var page = 1;
 $('#video-all-7').waterfall({
     imgClass: 'wf_img',    // 图片类名
     colWidth: 189,            // 列宽
@@ -45,76 +57,104 @@ $('#video-all-7').waterfall({
     marginTop: 15,            // 每列的上间宽
     perNum: 'auto',            // 每次下拉时显示多少个(int)(默认是列数)
     isAnimation: true,        // 是否使用动画效果
-    ajaxTimes: 'infinite',    // 限制加载的次数(int) 字符串'infinite'表示无限加载 
+    ajaxTimes: 3,    // 限制加载的次数(int) 字符串'infinite'表示无限加载 
     ajaxFunc: function(succ,err){
     	$.ajax({
 			 type: 'GET',
-			 url: '<?= get_template_directory_uri(); ?>/js/waterfall_jsonp.js?callback=?',
+			 url: '/all-video/more/?posts_per_page=5?paged=' + page,
 			 cache: false,
-			 dataType:'jsonp',
 			 jsonpCallback: 'wf_callback',
 			 timeout: 6000,
-			 success: succ,
+			 success: function(data){
+			 	succ(data);
+			 	page+=1;
+			 },
 			 error: err
 		});
     },
     createHtml: function(data){
-    	return '<a class="item" href="' + data.href + '"><img class="wf_img" src="' + data.imgSrc + '" /><div class="desc">' +data.describe+ '</div></a>';
+    	return '<a class="item" title="' + data.post_name + '" href="' + data.permlink + '">' + data.post_thumbnail + '"<div class="desc">' +data.post_name+ '</div></a>';
     }
 });
 
+})();
 
-
-// done ugly but working endless slide
-var slides = $(".slides li");
+// slides
+(function(){
+var ul = $(".slides");
+var slides = ul.find("li");
+var length = slides.length;
 var prev = $("#video-banner").find(".prev");
 var next = $("#video-banner").find(".next");
-Slide({
-    current:1,
-    autoplay:false,
-    endless:true,
-    prev:prev,
-    next:next,
-    slides:slides,
-    change:function(last,current,n,cur,direction){
-        var total = slides.length;
-        var prev_num = n - 1 < 0 ? total - 1 : (n - 1);
-        var next_num = n + 1 >= total ? 0 : (n + 1); 
-        prev.find(".txt").html(slides.eq(prev_num).attr("data-desc"));
-        next.find(".txt").html(slides.eq(next_num).attr("data-desc"));
+prev.find(".txt").html(slides.eq(0).attr("data-desc"));
+next.find(".txt").html(slides.eq(2).attr("data-desc"));
+var marginLeft = 298;
+var width = 792;
+var current = 1;
+var start = 1;
+var stage = 3;
+var sliding = false;
 
+// console.log(slides.clone());
+ul.append(slides.clone());
+// console.log(slides.clone().length);
+slides.clone().insertBefore(ul.find("li:eq(0)"));
+ul.css("left",parseInt(ul.css("left")) - width * length);
 
-        if(direction === "prev"){
-            if(cur == 1 || cur == 2){
-                $(".slides").animate({
-                    left:-(n+2) * 792 + 298
-                },function(){
-                    console.log(n,cur);
-                });
-            }else{
-                $(".slides").animate({
-                    left:-1 * 792 + 298
-                },function(){
-                    $(".slides").css("left",-2870);
-                });
-            }
-        }else{
-            if(cur == 0 || cur == 1){
-                $(".slides").animate({
-                    left:-(n+2) * 792 + 298
-                },function(){
-                    console.log(n,cur);
-                });
-            }else{
-                $(".slides").animate({
-                    left:-5 * 792 + 298
-                },function(){
-                    $(".slides").css("left",-1286);
-                });
-            }
-        }
-    }
+var startLeft = parseInt(ul.css("left"));
+prev.on("click",function(e){
+	if(sliding == true){return;}
+	sliding = true;
+	e.preventDefault();
+	current -= 1;
+	var current_slides = $(".slides li");
+	var prevli = current_slides.eq(current).prev();
+	var nextli = current_slides.eq(current).next();
+
+	prevli = prevli.length ? prevli : current_slides.last();
+	nextli = nextli.length ? nextli : current_slides.first();
+
+	prev.find(".txt").html(prevli.attr("data-desc"));
+    next.find(".txt").html(nextli.attr("data-desc"));
+
+    ul.animate({
+		left:parseInt(ul.css("left")) + width
+	},function(){
+		if(current == start - length){
+			ul.css("left",startLeft);
+			current = start;
+		}
+		sliding = false;
+	});
 });
+
+next.on("click",function(){	
+	if(sliding == true){return;}
+	sliding = true;
+	current += 1;
+	var current_slides = $(".slides li");
+	var prevli = current_slides.eq(current).prev();
+	var nextli = current_slides.eq(current).next();
+
+	prevli = prevli.length ? prevli : current_slides.last();
+	nextli = nextli.length ? nextli : current_slides.first();
+
+	prev.find(".txt").html(prevli.attr("data-desc"));
+    next.find(".txt").html(nextli.attr("data-desc"));
+    
+    ul.animate({
+		left:parseInt(ul.css("left")) - width
+	},function(){
+		if(current == start + length){
+			ul.css("left",startLeft);
+			current = start;
+		}
+		sliding = false;
+	});
+});
+
+})();
+
 
 // 视频弹层
 function openVideo(){

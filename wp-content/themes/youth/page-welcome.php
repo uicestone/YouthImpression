@@ -18,7 +18,7 @@
 }
 
 #welcome-bar .welcome_pic ul{
-    width:2000px;
+    width:3000px;
     left:0;
     position: absolute;
 }
@@ -71,9 +71,9 @@
     var items = $(".welcome_pic li");
     var count = items.length;
     var one_width = (items.width() + parseInt(items.css("margin-right")));
-    var width =  one_width * count;
+    var width =  0;
     var maxwidth = container.width();
-    while(width < maxwidth){
+    while(width < maxwidth + one_width * 4){
         for(var i = 0; i < count; i++){
             ul.append(items.eq(i).clone());
             width += one_width;
