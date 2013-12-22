@@ -60,6 +60,8 @@ img{border:0;}
 .header_nav ul li{
 	padding: 0 40px 0 20px;
 	font-size: 17px;
+	font-family: "Microsoft Yahei";
+	font-weight: bold;
 	background: url(../images/nav-delimiter.png) right no-repeat;
 }
 .header_nav ul li a{
