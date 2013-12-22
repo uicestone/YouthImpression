@@ -7,7 +7,7 @@ $posts = array();
 while(have_posts()){
 	the_post();
 	
-	$attachment = get_children(array('post_type'=>'attachment', 'post_parent'=>get_the_ID()));
+	$attachment = array_shift(get_children(array('post_parent'=>get_the_ID(), 'post_type'=>'attachment')));
 	
 	$posts[]=array(
 		'ID'=>get_the_ID(),

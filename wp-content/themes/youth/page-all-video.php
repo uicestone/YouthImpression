@@ -16,7 +16,7 @@ user-select: none;
     <div id="video-banner">
         <ul class="slides">
             <?php foreach(get_posts(array('category_name'=>'video')) as $post){?>
-	    <?php $attachment = array_pop(get_children(array('post_parent'=>$post->ID,'post_type'=>'attachment'))); ?>
+	    <?php $attachment = array_shift(get_children(array('post_parent'=>$post->ID,'post_type'=>'attachment'))); ?>
 			<li data-video="<?php if($attachment){ echo wp_get_attachment_url($attachment->ID); } ?>" data-desc="<?php echo $post->post_title; ?>"><a href="<?php echo get_permalink($post->ID); ?>"><?php echo get_the_post_thumbnail($post->ID,'all-video-slide'); ?></a></li>
             <?php } ?>
         </ul>
