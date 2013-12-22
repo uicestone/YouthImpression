@@ -1,9 +1,9 @@
 <?php get_header(); ?>
 <link rel="stylesheet" href="<?= get_template_directory_uri(); ?>/css/waterfall.css">
-<link rel='stylesheet' id='mediaelement-css'  href='<?= site_url(); ?>/wp-include/js/mediaelement/mediaelementplayer.min.css?ver=2.13.0' type='text/css' media='all' />
-<link rel='stylesheet' id='wp-mediaelement-css'  href='<?= site_url(); ?>/wp-includes/js/mediaelement/wp-mediaelement.css?ver=3.8' type='text/css' media='all' />
-<script type='text/javascript' src='<?= site_url(); ?>/wp-includes/js/mediaelement/mediaelement-and-player.min.js?ver=2.13.0'></script>
-<script type='text/javascript' src='<?= site_url(); ?>/wp-includes/js/mediaelement/wp-mediaelement.js?ver=3.8'></script>
+<link rel='stylesheet' id='mediaelement-css'  href='<?= includes_url() ?>/js/mediaelement/mediaelementplayer.min.css?ver=2.13.0' type='text/css' media='all' />
+<link rel='stylesheet' id='wp-mediaelement-css'  href='<?= includes_url() ?>/js/mediaelement/wp-mediaelement.css?ver=3.8' type='text/css' media='all' />
+<script type='text/javascript' src='<?= includes_url() ?>/js/mediaelement/mediaelement-and-player.min.js?ver=2.13.0'></script>
+<script type='text/javascript' src='<?= includes_url() ?>/js/mediaelement/wp-mediaelement.js?ver=3.8'></script>
 <!--[if lt IE 9]><script>document.createElement('video');</script><![endif]-->
 <style>
 #video-banner .prev,#video-banner .next{
