@@ -42,8 +42,8 @@ Slide({
     triggers:triggers,
     slides:slides,
     change:function(last,current){
-        last.fadeOut();
-        current.fadeIn();
+        last.fadeOut(700);
+        current.fadeIn(700);
     },
     afterChange:function(n){
         triggers.find("img").attr("src","<?= get_template_directory_uri(); ?>/images/pro-noClick.png");
