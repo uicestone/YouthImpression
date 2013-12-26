@@ -25,11 +25,13 @@ a:hover {
 img{border:0;}
 
 #home-wrap{
+	position: relative;
+	overflow: hidden;
 	height: 100%;
 	width: 100%;
 }
 #header-allbg{
-	background: url(images/header-allbg.jpg) repeat-y;
+	background: url(images/header-allbg.jpg);
 	height: 91px;
 	border-bottom: #FFF 1px solid;
 }
@@ -368,7 +370,11 @@ img{border:0;}
 	margin: 0 auto;
 }
 
-
+#welcome-wrap{
+	position:absolute;
+	width:100%;
+	top:0;
+}
 
 #welcome-bg{
 	width: 1387px;
@@ -385,12 +391,15 @@ img{border:0;}
 }
 
 .welcome_pic{
-	width: 1387px;
+	position: absolute;
 	margin: 0 auto;
-	padding-top: 275px;
+	top: 277px;
+}
+.welcome_pic ul {
+	position: absolute;
 }
 .welcome_pic ul li{
-	float: left;
+	position:absolute;
 	margin-right: 10px;
 }
 #welcome-bigPic{
