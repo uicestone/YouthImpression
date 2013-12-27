@@ -14,7 +14,7 @@ add_image_size( 'all-video-waterfall', 190, 0);
 add_image_size( 'product-slide', 1120, 618, true);
 
 add_action('wp_head', function(){
-	echo '<title>'.wp_title('',false).' - '.get_bloginfo('name').'</title>';
+	echo '<title>'.(is_home()?'':wp_title('',false).' - ').get_bloginfo('name').'</title>';
 	echo '<link rel="shortcut icon" href="'.get_stylesheet_directory_uri().'/images/favicon.ico" />';
 });
 
