@@ -15,7 +15,7 @@ user-select: none;
 <div id="content-all2">    
     <div id="video-banner">
         <ul class="slides">
-            <?php foreach(get_posts(array('category_name'=>'video')) as $post){?>
+            <?php foreach(get_posts(array('category_name'=>'video','tag'=>'焦点')) as $post){?>
 	    <?php $attachment = array_shift(get_children(array('post_parent'=>$post->ID,'post_type'=>'attachment'))); ?>
 			<li data-video="<?php if($attachment){ echo wp_get_attachment_url($attachment->ID); } ?>" data-desc="<?php echo $post->post_title; ?>"><a href="<?php echo get_permalink($post->ID); ?>"><?php echo get_the_post_thumbnail($post->ID,'all-video-slide'); ?></a></li>
             <?php } ?>
@@ -82,7 +82,7 @@ $('#video-all-7').waterfall({
         },err);
     },
     createHtml: function(data){
-        return '<a class="item" data-video="' + (data.video||"") + '" title="' + data.post_name + '" href="' + data.permlink + '">' + data.post_thumbnail + '<div class="desc">' +data.post_name+ '</div></a>';
+        return '<a class="item" data-video="' + (data.video||"") + '" title="' + data.post_name + '" href="' + data.permlink + '" target="_blank">' + data.post_thumbnail + '<div class="desc">' +data.post_name+ '</div></a>';
     }
 });
 
@@ -178,10 +178,12 @@ $(".slides").on("click","li",function(e){
     openVideo($(this).attr("data-video"));
 });
 
-$(".waterfall").on("click",".item",function(e){
+/*
+ $(".waterfall").on("click",".item",function(e){
     e.preventDefault();
     openVideo($(this).attr("data-video")); 
-});
+});*/
+
 // 视频弹层
 function openVideo(videoSrc,href){
     pop.show();
