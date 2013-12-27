@@ -43,7 +43,7 @@
 <div id="welcome-wrap">
 <div id="welcome-bg">
         <div id="welcome-bigPic" class="bigPic-welcome">
-            <img src="<?= get_template_directory_uri(); ?>/images/welcome-bigPic.png" width="831" height="552" />
+            <img src="<?= get_template_directory_uri(); ?>/images/welcome-bigPic.jpg" width="831" height="552" />
             <a href="<?php site_url(); ?>/index/" id="enter-btn"></a>
         </div>
     </div>
