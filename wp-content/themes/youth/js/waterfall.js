@@ -21,7 +21,6 @@
         colWidth: 235,          // 列宽
         marginLeft: 15,         // 每列的左间宽
         marginTop: 15,          // 每列的上间宽
-        perNum: 'auto',         // 每次下拉时显示多少个(默认是列数)
         isAnimation: true,      // 是否使用动画效果
         ajaxTimes: 'infinite',  // 限制加载的次数(int) 字符串'infinite'表示无限加载 
         url: null,              // 数据来源(ajax加载，返回json格式)，传入了ajaxFunc参数，此参数将无效
@@ -199,13 +198,12 @@
         
         // 处理返回的数据
         function dealData(){
-            var perNum = typeof opts.perNum === 'number' ? opts.perNum : opts.colNum,
-                data = null,
+            var data = null,
                 wf_col_height = $wf_col.height(),
                 $wf_item, $wf_img, htmlStr;
             // 确保所有图片都已知宽高
             loadImg(jsonCache, opts.imgUrlName, function(){
-                while(perNum-- > 0 && (data = jsonCache.pop())){
+                while((data = jsonCache.pop())){
                     
                     minColsIndex = getColsIndex(colsHeight)[0];
                     
@@ -380,7 +378,6 @@
         colWidth: 235,          // 列宽(int)
         marginLeft: 15,         // 每列的左间宽(int)
         marginTop: 15,          // 每列的上间宽(int)
-        perNum: 'auto',         // 每次下拉时显示多少个(默认是列数)
         isAnimation: true,      // 是否使用动画效果
         ajaxTimes: 'infinite',  // 限制异步请求的次数(int) 字符串'infinite'表示无限加载
         imgUrlName: 'imgSrc',   // 在json里表示图片路径的属性名称(用于预加载图片获取高宽)
