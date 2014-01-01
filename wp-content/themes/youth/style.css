@@ -376,7 +376,6 @@ img{border:0;}
 }
 
 #welcome-bg{
-	width: 1387px;
 	height: 746px;
 	background: url(images/welcome-bg.png) no-repeat;
 	margin: 0 auto;
@@ -403,12 +402,10 @@ img{border:0;}
 }
 #welcome-bigPic{
 	top: 97px;
-	left: 276px;
+	width: 831px;
 	z-index: 11;
-}
-.bigPic-welcome{
-	display: inline-block;
-	position: absolute;
+	margin: 0 auto;
+	position: relative
 }
 
 #content-all2{

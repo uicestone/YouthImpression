@@ -11,8 +11,6 @@
     left:0;
     position: absolute;
 }
-#welcome-bigPic{
-}
 #enter-btn{
     width:240px;
     height:160px;
