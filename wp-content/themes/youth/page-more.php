@@ -1,6 +1,6 @@
 <?php
 
-query_posts(array('category_name'=>'video','tag'=>'瀑布流','posts_per_page'=>12));
+query_posts(array('category_name'=>'video','tag'=>'瀑布流','posts_per_page'=>12,'paged'=>get_query_var('paged')));
 
 $posts = array();
 
