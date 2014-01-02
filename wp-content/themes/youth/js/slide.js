@@ -66,5 +66,5 @@ var Slide = function(opt){
         e.preventDefault();
         to(triggers.index(this));
     });
-    autoplay && setInterval(toNext,3000);
+    autoplay && setInterval(toNext,5000);
 };
