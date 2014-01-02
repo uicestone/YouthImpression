@@ -49,11 +49,7 @@ user-select: none;
   <div style=" background:url(images/v-l.png) no-repeat; width: 55px; height:500px; float:left; color: #999;">
   <ul style="list-style:none; width:32px; padding:0; padding-left: 12px; padding-top:134px; margin:0;">
     <li style="padding-bottom:3px;">分享</li>
-    <li style="padding-bottom:7px;"><a href="#"><img src="<?= get_template_directory_uri(); ?>/images/weibo-icon.jpg" width="32" height="32" style="line-height:0; display:block;"></a></li>
-    <li style="padding-bottom:7px;"><a href="#"><img src="<?= get_template_directory_uri(); ?>/images/renren.jpg" width="32" height="32" style="line-height:0; display:block;"></a></li>
-    <li style="padding-bottom:7px;"><a href="#"><img src="<?= get_template_directory_uri(); ?>/images/qq.jpg" width="32" height="32" style="line-height:0; display:block;"></a></li>
-    <li style="padding-bottom:7px;"><a href="#"><img src="<?= get_template_directory_uri(); ?>/images/kaixin.jpg" width="32" height="32" style="line-height:0; display:block;"></a></li>
-    <li><a href="#"><img src="<?= get_template_directory_uri(); ?>/images/douban.jpg" width="32" height="32"></a></li>
+    <li style="padding-bottom:7px;"><a target="_blank" href="#" class="weibo-share-link"><img src="<?= get_template_directory_uri(); ?>/images/weibo-icon.jpg" width="32" height="32" style="line-height:0; display:block;"></a></li>
   </ul>
   </div>
   <div class="video-container">
@@ -175,7 +171,10 @@ var player = null;
 
 $(".slides").on("click","li",function(e){
     e.preventDefault();
-    openVideo($(this).attr("data-video"));
+    openVideo($(this).attr("data-video"),{
+        pic: $(this).find("img").attr("src"),
+        title: "青春映画 - " + $(this).attr("data-desc")
+    });
 });
 
 /*
@@ -185,14 +184,14 @@ $(".slides").on("click","li",function(e){
 });*/
 
 // 视频弹层
-function openVideo(videoSrc,href){
+window.openVideo = function openVideo(videoSrc,share){
     pop.show();
-    if(!player){
+    try{
+        player.setSrc(videoSrc);
+    }catch(e){
         var video = $("<video src='" + videoSrc + "' width='820' height='470'></video>");
         $(".video-container .video").empty().append(video);
         player = new MediaElementPlayer("#pop video");
-    }else{
-        player.setSrc(videoSrc);
     }
     function pos(){
         pop.css({
@@ -201,6 +200,21 @@ function openVideo(videoSrc,href){
             left:$(window).width()/2 - 900/2 - 30
         });
     }
+    var e = encodeURIComponent;
+    var link = location.href;
+    var title = share.title;
+    var pic = share.pic;
+
+    link = "http://v.t.sina.com.cn/share/share.php?" 
+    + "url=" + e(link) 
+    + "&title=" + e(title)
+    + "&pic=" + e(pic);
+
+    pop.find(".weibo-share-link").attr("href",link).on("click",function(e){
+        e.preventDefault();
+        window.open(link,null,"width=500px,height=400px,top=200,left=200");
+        return false;
+    });
     $(window).on("resize",function(){
         pos();
     });
