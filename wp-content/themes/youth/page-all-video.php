@@ -49,13 +49,15 @@ user-select: none;
   <div style=" background:url(images/v-l.png) no-repeat; width: 55px; height:500px; float:left; color: #999;">
   <ul style="list-style:none; width:32px; padding:0; padding-left: 12px; padding-top:134px; margin:0;">
     <li style="padding-bottom:3px;">分享</li>
-    <li style="padding-bottom:7px;"><a target="_blank" href="#" class="weibo-share-link"><img src="<?= get_template_directory_uri(); ?>/images/weibo-icon.jpg" width="32" height="32" style="line-height:0; display:block;"></a></li>
+    <li style="padding-bottom:7px;">
+        <a target="_blank" href="#" class="weibo-share-link"></a></li>
   </ul>
   </div>
   <div class="video-container">
     <img src="<?= get_template_directory_uri(); ?>/images/v-r.png" width="848" height="500">
     <div class="video"></div>
   </div>
+  <div class="close-btn"></div>
 </div>
 
 
@@ -168,7 +170,7 @@ shadow.on("click",function(){
     closeVideo();
 });
 var player = null;
-
+pop.find(".close-btn").on("click",closeVideo);
 $(".slides").on("click","li",function(e){
     e.preventDefault();
     openVideo($(this).attr("data-video"),{
@@ -184,7 +186,8 @@ $(".slides").on("click","li",function(e){
 });*/
 
 // 视频弹层
-window.openVideo = function openVideo(videoSrc,share){
+function openVideo(videoSrc,share){
+    if(!MediaElementPlayer){return;}
     pop.show();
     try{
         player.setSrc(videoSrc);

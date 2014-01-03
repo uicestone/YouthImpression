@@ -517,7 +517,25 @@ img{border:0;}
 	position: absolute;
 }
 
+#pop .weibo-share-link{
+	display: block;
+	height: 32px;
+	width: 32px;
+	background-image: url("images/weibo-icon.png");
+}
 
+#pop .weibo-share-link:hover{
+	background-position: 0 -32px;
+}
+#pop .close-btn{
+	width:32px;
+	height:32px;
+	position:absolute;
+	right:-14px;
+	top:-6px;
+	cursor: pointer;
+	background-image: url("images/close-btn.png");
+}
 #pop .video-container{
     width: 848px; 
     height: 500px;
