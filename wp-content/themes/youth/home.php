@@ -41,8 +41,10 @@
 <div id="welcome-wrap">
 <div id="welcome-bg">
         <div id="welcome-bigPic" class="bigPic-welcome">
-            <img src="<?= get_template_directory_uri(); ?>/images/welcome-bigPic.jpg" width="831" height="552" />
-            <a href="<?php site_url(); ?>/index/" id="enter-btn"></a>
+            <img src="<?= get_template_directory_uri(); ?>/images/welcome-bigPic.jpg" width="831" height="552" usemap="#enterbtn" />
+            <map name="enterbtn">
+                <area shape="rect" coords="592,411,831,529" href="<?php site_url(); ?>/index/">
+            </map>
         </div>
     </div>
     <div class="index-weibo" style="clear: both; margin-top: 266px; width: 1334px; margin: 0 auto;">
