@@ -159,7 +159,6 @@
                             showMsg('loading');
                             // 传参给服务器
                             opts.params.ajax = ++ajaxTimes;
-                            console.log(opts.ajaxTimes === 'infinite' , ajaxTimes < opts.ajaxTimes , !needManual);
                             if(ajaxTimes >= opts.ajaxTimes){
                                 needManual = true;
                             }
@@ -187,7 +186,6 @@
                             );
                                     
                         }else{
-                            console.log("there");
                             showMsg('manual');
                         }
                     }
