@@ -1,10 +1,10 @@
-/* 
+/*
 	Theme Name: 青春映画
 */
 body {
-	margin: 0; 
+	margin: 0;
 	padding: 0;
-	text-align: left; 
+	text-align: left;
 	color: #333333;
 	background: url(images/all-bg.jpg) repeat-y;
 	font-family: arial,"Hiragino Sans GB","Microsoft Yahei",sans-serif;
@@ -49,7 +49,7 @@ img{border:0;}
 	float: left;
 	margin-left: 166px;
 	margin-top: 55px;
-	
+
 }
 .header_nav ul li{
 	float:left;
@@ -437,7 +437,7 @@ img{border:0;}
 
 #video-banner .left-shadow,
 #video-banner .right-shadow{
-	position: absolute;	
+	position: absolute;
 	height: 100%;
 	background-color: #000;
 	opacity: .8;
@@ -517,16 +517,58 @@ img{border:0;}
 	position: absolute;
 }
 
-#pop .weibo-share-link{
+#pop .share-link{
 	display: block;
 	height: 32px;
 	width: 32px;
-	background-image: url("images/weibo-icon.png");
+	margin-bottom:7px;
+	background-image: url("images/share-icons.png");
+}
+
+#pop .weibo-share-link{
+	background-position: 0 0;
 }
 
 #pop .weibo-share-link:hover{
 	background-position: 0 -32px;
 }
+
+#pop .qqt-share-link{
+	background-position: -32px 0;
+}
+
+#pop .qqt-share-link:hover{
+	background-position: -32px -32px;
+}
+
+
+#pop .renren-share-link{
+	background-position: -64px 0;
+}
+
+#pop .renren-share-link:hover{
+	background-position: -64px -32px;
+}
+
+
+#pop .kaixin-share-link{
+	background-position: -96px 0;
+}
+
+#pop .kaixin-share-link:hover{
+	background-position: -96px -32px;
+}
+
+
+#pop .douban-share-link{
+	background-position: -128px 0;
+}
+
+#pop .douban-share-link:hover{
+	background-position: -128px -32px;
+}
+
+
 #pop .close-btn{
 	width:32px;
 	height:32px;
@@ -537,14 +579,14 @@ img{border:0;}
 	background-image: url("images/close-btn.png");
 }
 #pop .video-container{
-    width: 848px; 
+    width: 848px;
     height: 500px;
     float:right;
     position: relative;
 }
 
 #pop .video-container img{
-    width: 848px; 
+    width: 848px;
     height: 500px;
     position: absolute;
     top: 0;

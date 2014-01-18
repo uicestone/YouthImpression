@@ -12,7 +12,7 @@ user-select: none;
 }
 </style>
 <script src="<?= get_template_directory_uri(); ?>/js/waterfall.js"></script>
-<div id="content-all2">    
+<div id="content-all2">
     <div id="video-banner">
         <ul class="slides">
             <?php foreach(get_posts(array('category_name'=>'video','tag'=>'焦点')) as $post){?>
@@ -22,21 +22,21 @@ user-select: none;
         </ul>
 
         <div class="prev">
-            <div class="arr"></div> 
+            <div class="arr"></div>
             <span class="txt"></span>
         </div>
         <div class="next">
             <span class="txt"></span>
-            <div class="arr"></div> 
+            <div class="arr"></div>
         </div>
 
         <div class="left-shadow"></div>
         <div class="right-shadow"></div>
-    </div> 
-    
+    </div>
+
 
     <div id="video-all-7">
-    </div>       
+    </div>
   <div class="back-btn">
         <a href="#"><img src="<?= get_template_directory_uri(); ?>/images/back.png" width="60" height="24" /></a>
     </div>
@@ -49,8 +49,21 @@ user-select: none;
   <div style=" background:url(images/v-l.png) no-repeat; width: 55px; height:500px; float:left; color: #999;">
   <ul style="list-style:none; width:32px; padding:0; padding-left: 12px; padding-top:134px; margin:0;">
     <li style="padding-bottom:3px;">分享</li>
-    <li style="padding-bottom:7px;">
-        <a target="_blank" href="#" class="weibo-share-link"></a></li>
+    <li>
+        <a target="_blank" href="#" data-dest="weibo" class="weibo-share-link share-link"></a>
+    </li>
+    <li>
+        <a target="_blank" href="#" data-dest="qqt" class="qqt-share-link share-link"></a>
+    </li>
+    <li>
+        <a target="_blank" href="#" data-dest="renren" class="renren-share-link share-link"></a>
+    </li>
+    <li>
+        <a target="_blank" href="#" data-dest="kaixin" class="kaixin-share-link share-link"></a>
+    </li>
+    <li>
+        <a target="_blank" href="#" data-dest="douban" class="douban-share-link share-link"></a>
+    </li>
   </ul>
   </div>
   <div class="video-container">
@@ -72,7 +85,7 @@ $('#video-all-7').waterfall({
     marginTop: 15,            // 每列的上间宽
     perNum: 'auto',            // 每次下拉时显示多少个(int)(默认是列数)
     isAnimation: true,        // 是否使用动画效果
-    ajaxTimes: 3,    // 限制加载的次数(int) 字符串'infinite'表示无限加载 
+    ajaxTimes: 3,    // 限制加载的次数(int) 字符串'infinite'表示无限加载
     ajaxFunc: function(succ,err){
         $.getJSON('more/page/' + page, function(data){
             succ(data);
@@ -135,7 +148,7 @@ prev.on("click",function(e){
     });
 });
 
-next.on("click",function(){ 
+next.on("click",function(){
     if(sliding == true){return;}
     sliding = true;
     current += 1;
@@ -148,7 +161,7 @@ next.on("click",function(){
 
     prev.find(".txt").html(prevli.attr("data-desc"));
     next.find(".txt").html(nextli.attr("data-desc"));
-    
+
     ul.animate({
         left:parseInt(ul.css("left")) - width
     },function(){
@@ -182,7 +195,7 @@ $(".slides").on("click","li",function(e){
 /*
  $(".waterfall").on("click",".item",function(e){
     e.preventDefault();
-    openVideo($(this).attr("data-video")); 
+    openVideo($(this).attr("data-video"));
 });*/
 
 // 视频弹层
@@ -208,16 +221,31 @@ function openVideo(videoSrc,share){
     var title = share.title;
     var pic = share.pic;
 
-    link = "http://v.t.sina.com.cn/share/share.php?" 
-    + "url=" + e(link) 
-    + "&title=" + e(title)
-    + "&pic=" + e(pic);
+    var shareTemplates = {
+        "kaixin": "http://www.kaixin001.com/repaste/share.php?rtitle={title}&rurl={url}&rcontent=",
+        "qqt": "http://v.t.qq.com/share/share.php?url={url}&title={title}&pic={pic}&site={site}",
+        "weibo": "http://v.t.sina.com.cn/share/share.php?url={url}&title={title}&pic={pic}",
+        "renren": "http://share.renren.com/share/buttonshare.do?link={url}&title={title}",
+        "douban": "http://www.douban.com/share/service?image={pic}&href={url}&name={title}"
+    };
 
-    pop.find(".weibo-share-link").attr("href",link).on("click",function(e){
-        e.preventDefault();
-        window.open(link,null,"width=500px,height=400px,top=200,left=200");
-        return false;
-    });
+    function substitute(str,obj){
+        return(""+str).replace(/\\?\{([^{}]+)\}/g,function(a,b){return"\\"===a.charAt(0)?a.slice(1):null!=obj[b]?obj[b]:""})
+    }
+
+    pop.find(".share-link").each(function(i,el){
+        el = $(el);
+        var shareLink = substitute(shareTemplates[el.attr("data-dest")],{
+            url:e(link),
+            title:e(title),
+            pic:e(pic)
+        });
+        el.on("click",function(e){
+            e.preventDefault();
+            window.open(shareLink,null,"width=500px,height=400px,top=200,left=200");
+            return false;
+        });
+    })
     $(window).on("resize",function(){
         pos();
     });
