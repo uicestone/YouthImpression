@@ -4,7 +4,7 @@
         <div id="content-all">  
             <div class="contactUs-content">
             	<div class="map-left">
-                	<img src="<?= get_template_directory_uri(); ?>/images/map.jpg" width="570" height="459" />
+                    <a href="http://j.map.baidu.com/iA8Vp" target="_blank"><img src="<?= get_template_directory_uri(); ?>/images/map.jpg" width="570" height="459" /></a>
                     <h4>地址：闸北区彭江路602号大宁德必易园e栋308室</h4>
                     <h1>青春映画 <span style="font-size:28px;">个人影视制作机构</span></h1>
                     <h3>公司内配置了高清影院、虚拟演播室、专业录音棚、高清摄录设备融合时尚元素和现代简约风格，旨在打造成为江城影像文化坐标</h3>

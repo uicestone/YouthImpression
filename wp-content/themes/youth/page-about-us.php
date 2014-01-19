@@ -2,7 +2,7 @@
 <div id="aboutus-bg">
     <div class="aboutUs-video">
         <div class="about-video" data-video="">
-            <a href="#"><img src="<?= get_template_directory_uri(); ?>/images/about-video.png" width="231" height="133" /></a>
+            <a href="http://v.youku.com/v_show/id_XNjQ2MzY0ODE2.html" target="_blank"><img src="<?= get_template_directory_uri(); ?>/images/about-video.png" width="231" height="133" /></a>
         </div>
         <div class="about-txt">
             <h2>导演：胡博</h2>
@@ -47,10 +47,10 @@ shadow.on("click",function(){
 });
 var player = null;
 
-$(".about-video").on("click",function(e){
+/*$(".about-video").on("click",function(e){
     e.preventDefault();
     openVideo($(this).attr("data-video"));
-});
+});*/
 
 // 视频弹层
 function openVideo(videoSrc,href){
