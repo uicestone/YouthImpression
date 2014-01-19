@@ -240,7 +240,7 @@ function openVideo(videoSrc,share){
             title:e(title),
             pic:e(pic)
         });
-        el.on("click",function(e){
+        el.off("click").on("click",function(e){
             e.preventDefault();
             window.open(shareLink,null,"width=500px,height=400px,top=200,left=200");
             return false;
