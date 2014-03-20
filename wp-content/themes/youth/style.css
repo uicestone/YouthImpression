@@ -176,6 +176,9 @@ img{border:0;}
 	padding-top: 100px;
 	margin-bottom: 50px;
 }
+.contactUs-content a:hover{
+	color: #d3325b;
+}
 .map-left{
 	width: 570px;
 	float: left;
