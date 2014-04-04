@@ -20,7 +20,7 @@
           </div>
     </div>
         <div class="index-weibo" style="clear: both; margin-bottom: 50px; margin: 0 auto;">
-            <a href="#"><img src="<?= get_template_directory_uri(); ?>/images/index-weibo.png" width="171" height="39" /></a>
+            <a href="https://api.weibo.com/oauth2/authorize?<?=http_build_query(array('client_id'=>2392095374, 'redirect_uri'=>'http://www.youth-impression.com'))?>"><img src="<?= get_template_directory_uri(); ?>/images/index-weibo.png" width="171" height="39" /></a>
         </div>
     </div>
 
