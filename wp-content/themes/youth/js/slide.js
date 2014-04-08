@@ -1,10 +1,8 @@
-(function($){
-
 var Slide = function(opt){
     var pause = false;
     var slides = opt.slides;
     var container = slides.parent();
-    var triggers = $(opt.triggers);
+    var triggers = jQuery(opt.triggers);
     var prev = opt.prev;
     var next = opt.next;
     var afterChange = opt.afterChange || function(){};
@@ -70,5 +68,3 @@ var Slide = function(opt){
     });
     autoplay && setInterval(toNext,5000);
 };
-
-})(jQuery)
