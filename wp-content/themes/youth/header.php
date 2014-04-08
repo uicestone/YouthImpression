@@ -17,7 +17,7 @@
         </div>
         <div class="weibo">
             <span><a href="#">新浪微博账号登入</a></span>
-            <a href="#"><img src="<?= get_template_directory_uri(); ?>/images/weibo.png" width="36" height="36" /></a>
+            <a href="https://api.weibo.com/oauth2/authorize?<?=http_build_query(array('client_id'=>2392095374, 'redirect_uri'=>'http://www.youth-impression.com'))?>"><img src="<?= get_template_directory_uri(); ?>/images/weibo.png" width="36" height="36" /></a>
         </div>
     </div>
 </div>
