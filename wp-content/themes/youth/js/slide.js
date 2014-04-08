@@ -1,3 +1,5 @@
+(function($){
+
 var Slide = function(opt){
     var pause = false;
     var slides = opt.slides;
@@ -68,3 +70,5 @@ var Slide = function(opt){
     });
     autoplay && setInterval(toNext,5000);
 };
+
+})(jQuery)

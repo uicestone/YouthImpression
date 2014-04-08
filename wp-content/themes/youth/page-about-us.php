@@ -39,7 +39,7 @@
 
 <script>
 
-(function(){
+(function($){
 var shadow = $("#shadow");
 var pop = $("#pop");
 shadow.on("click",function(){
@@ -82,6 +82,6 @@ function closeVideo(){
     shadow.hide();
 }
 
-})();
+})(jQuery);
 </script>
 <?php get_footer(); ?>

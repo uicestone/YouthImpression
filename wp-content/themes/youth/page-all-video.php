@@ -76,7 +76,7 @@ user-select: none;
 
 <script>
 
-(function(){
+(function($){
 var page = 1;
 $('#video-all-7').waterfall({
     imgClass: 'wf_img',    // 图片类名
@@ -97,10 +97,10 @@ $('#video-all-7').waterfall({
     }
 });
 
-})();
+})(jQuery);
 
 // slides
-(function(){
+(function($){
 var ul = $(".slides");
 var slides = ul.find("li");
 var length = slides.length;
@@ -173,10 +173,10 @@ next.on("click",function(){
     });
 });
 
-})();
+})(jQuery);
 
 
-(function(){
+(function($){
 var shadow = $("#shadow");
 var pop = $("#pop");
 shadow.on("click",function(){
@@ -259,7 +259,7 @@ function closeVideo(){
     shadow.hide();
 }
 
-})();
+})(jQuery);
 
 </script>
 <?php get_footer(); ?>

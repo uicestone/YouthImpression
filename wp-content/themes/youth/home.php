@@ -55,7 +55,7 @@
 </div>
 <script>
 jQuery.fx.interval = 45;
-(function(){
+(function($){
     var container = $(".welcome_pic");
     var ul = container.find("ul");
     var items = $(".welcome_pic li");
@@ -83,7 +83,7 @@ jQuery.fx.interval = 45;
     }
     
     scroll();
-})();
+})(jQuery);
 
 </script>
 

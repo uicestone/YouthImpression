@@ -31,10 +31,13 @@
 
 <script src="<?= get_template_directory_uri(); ?>/js/slide.js"></script>
 <script>
+(function($){
+
 var slides = $("#Product-content1 li");
 var prev = $(".Pro-click").find(".prev");
 var next = $(".Pro-click").find(".next");
 var triggers = $(".Pro-click").find("li");
+
 Slide({
     autoplay:true,
     prev:prev,
@@ -50,6 +53,8 @@ Slide({
         triggers.eq(n).find("img").attr("src","<?= get_template_directory_uri(); ?>/images/pro-nowClick.png");
     }
 });
+
+})(jQuery);
 </script>
 
 <?php get_footer(); ?>

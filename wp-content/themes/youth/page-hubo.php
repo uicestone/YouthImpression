@@ -28,6 +28,8 @@
 </div>
 
 <script>
+(function($){
+
 var track = $("#track a");
 $(".year a").on("mouseenter",function(){
     var year = $(this).parent();
@@ -43,6 +45,8 @@ $(".year a").on("mouseenter",function(){
 var left = $(".year").last().attr("data-track-left") + "px";
 track.css("left",left);
 track.show();
+
+})(jQuery)
 </script>
 
 <?php get_footer(); ?>

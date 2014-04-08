@@ -1,4 +1,4 @@
-(function(){
+(function($){
 	var ul = $(".slides");
 var slides = ul.find("li");
 var length = slides.length;
@@ -70,4 +70,4 @@ next.on("click",function(){
 	});
 });
 
-})();
+})(jQuery);
